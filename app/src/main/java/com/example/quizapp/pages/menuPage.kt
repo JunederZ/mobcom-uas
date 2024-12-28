@@ -80,7 +80,6 @@ fun QuestionBox(quizId: Int, showEdit: Boolean = false) {
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Quiz text centered vertically and horizontally
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -90,24 +89,21 @@ fun QuestionBox(quizId: Int, showEdit: Boolean = false) {
                     Text("Quiz box $quizId")
                 }
 
-                // Bottom bar with edit button
                 AnimatedVisibility(
                     visible = showEdit,
                 ) {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.surfaceVariant,
-                                shape = RoundedCornerShape(16.dp)
-                            )
-                            .padding(4.dp),
+                        modifier = Modifier,
                         contentAlignment = Alignment.Center
                     ) {
                         TextButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(16.dp)),
                             onClick = {},
                             colors = ButtonDefaults.textButtonColors(
-                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
                             )
                         ) {
                             Text("Edit")
