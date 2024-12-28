@@ -1,37 +1,41 @@
 package com.example.quizapp.pages
 
+import android.content.res.Resources.Theme
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,8 +46,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+import com.example.quizapp.ui.theme.QuizappTheme
+
 @Composable
-fun QuestionBox(quizId: Int) {
+fun QuestionBox(quizId: Int, showEdit: Boolean = false) {
+
 
     // Get Quiz Information
     // ----
@@ -53,30 +60,63 @@ fun QuestionBox(quizId: Int) {
         modifier = Modifier
             .fillMaxSize()
             .size(32.dp, 128.dp)
-            .padding(8.dp)
-            .fillMaxSize()
-            .fillMaxHeight(),
+            .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
         Button(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .clip(RectangleShape),
-            colors = ButtonColors(
-                Color.LightGray,
-                disabledContainerColor = Color.Transparent,
-                disabledContentColor = Color.Transparent,
-                contentColor = Color.Black
+                .clip(RoundedCornerShape(16.dp)),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                contentColor = MaterialTheme.colorScheme.secondary
             ),
             shape = RoundedCornerShape(16.dp),
-
             onClick = {}
         ) {
-            Text("Quiz box $quizId")
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Quiz text centered vertically and horizontally
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Quiz box $quizId")
+                }
 
+                // Bottom bar with edit button
+                AnimatedVisibility(
+                    visible = showEdit,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .padding(4.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        TextButton(
+                            onClick = {},
+                            colors = ButtonDefaults.textButtonColors(
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        ) {
+                            Text("Edit")
+                        }
+                    }
+                }
+            }
         }
-}
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,61 +124,83 @@ fun QuestionBox(quizId: Int) {
 @Composable
 fun MainPage() {
 
-    Scaffold (
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(
-                    text = "Quzap",
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-                },
-                modifier = Modifier,
-                colors = TopAppBarColors(
-                    MaterialTheme.colorScheme.primary,
-                    scrolledContainerColor = Color.Black,
-                    navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = Color.Black,
-                    actionIconContentColor = Color.Black
-                ),
-                scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-            )
-        },
-        bottomBar = { BottomAppBar (
-            modifier = Modifier.fillMaxWidth(),
-            containerColor = Color.Transparent,
-        ) {
-            Column (
-                modifier = Modifier.fillMaxWidth().fillMaxHeight().align(Alignment.CenterVertically),
-                horizontalAlignment = Alignment.CenterHorizontally,  // Add this
-                verticalArrangement = Arrangement.Center      // Add this
+    var showEdit by remember { mutableStateOf(false) }
 
-            ){
-                TextButton (
-                    onClick = {},
-                    modifier = Modifier.background(Color.Black, RoundedCornerShape(100.dp))
+    QuizappTheme  {
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(
+                            text = "Quzap",
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    },
+                    modifier = Modifier,
+                    colors = TopAppBarColors(
+                        MaterialTheme.colorScheme.primaryContainer,
+                        scrolledContainerColor = Color.Black,
+                        navigationIconContentColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = Color.Black,
+                        actionIconContentColor = Color.Black
+                    ),
+                    scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+                )
+            },
+            bottomBar = {
+                BottomAppBar(
+                    modifier = Modifier.fillMaxWidth(),
+                    containerColor = Color.Transparent,
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                    Text("Add New Quiz", color = Color.White)
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .align(Alignment.CenterVertically),
+//                        horizontalAlignment = Alignment.CenterHorizontally,
+//                        verticalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically,
+
+                    ) {
+                        TextButton(
+                            onClick = {},
+                            modifier = Modifier.background(Color.Black, RoundedCornerShape(100.dp))
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                            Text("Add New Quiz", color = Color.White)
+                        }
+                        TextButton(
+                            onClick = {showEdit = !showEdit},
+                            modifier = Modifier.background(Color.Black, RoundedCornerShape(100.dp))
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                            Text("Edit Quiz", color = Color.White)
+                        }
+                    }
                 }
             }
-        }
-        }
-    )
-    { innerPadding ->
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 200.dp),
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            items(5) { index ->
-                QuestionBox(index)
+        )
+        { innerPadding ->
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 200.dp),
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                items(12) { index ->
+                    QuestionBox(index, showEdit)
+                }
+
             }
 
         }
-
     }
 }
