@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -70,14 +71,8 @@ dependencies {
     // No additional plugins are necessary
     annotationProcessor(libs.androidx.room.compiler)
 
+//    implementation(libs.)
 
-
-//    implementation(libs.androidx.room.runtime)
-//    implementation(libs.kotlinx.coroutines.android)
-//    implementation(libs.androidx.room.ktx)
-//    implementation(libs.androidx.ui.text.google.fonts)
-//    implementation(libs.androidx.runtime.livedata)
-//    ksp(libs.androidx.room.compiler)
 
 
 }
