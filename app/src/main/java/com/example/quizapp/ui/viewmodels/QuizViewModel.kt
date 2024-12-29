@@ -32,17 +32,10 @@ class QuizViewModel @Inject constructor(
     )
     val quiz: StateFlow<WholeQuiz> = _quiz
 
-    val abc: StateFlow<String> = MutableStateFlow("babab")
 
     init {
-//        viewModelScope.launch {
-//            print("BEGINNNNNNNN")
-////            abc.collect { Log.d("StateFlow", "Current value: $it") }
-////            populateDatabase()
-//        }
-        viewModelScope.launch {
-//            print("BEGINNNNNNNN")
 
+        viewModelScope.launch {
 //            populateDatabase()
 //            _quiz.value = quizDao.getWholeQuiz(1)
 //            quiz.collect { Log.d("StateFlow", "Current value: $it") }
