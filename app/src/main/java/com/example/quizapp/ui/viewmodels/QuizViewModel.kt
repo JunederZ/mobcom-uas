@@ -3,6 +3,7 @@ package com.example.quizapp.ui.viewmodels
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizapp.data.dao.AnswerOptionDao
@@ -25,7 +26,16 @@ class QuizViewModel @Inject constructor(
     private val quizDao: QuizDao,
     private val questionDao: QuestionDao,
     private val answerOptionDao: AnswerOptionDao,
+    private val savedStateHandle: SavedStateHandle,
 ): ViewModel() {
+
+    val quizId: Int = savedStateHandle["quizId"]!!
+
+    private val _questionIndex = MutableStateFlow(0)
+    val questionIndex: StateFlow<Int> = _questionIndex
+
+    private val _progress = MutableStateFlow(0f)
+    val progress: StateFlow<Float> = _progress
 
     private val _quiz = MutableStateFlow(
         WholeQuiz(null, null)
@@ -34,14 +44,20 @@ class QuizViewModel @Inject constructor(
 
 
     init {
-
         viewModelScope.launch {
-//            populateDatabase()
-//            _quiz.value = quizDao.getWholeQuiz(1)
-//            quiz.collect { Log.d("StateFlow", "Current value: $it") }
-
-
+            _quiz.value = quizDao.getWholeQuiz(quizId)
+            _progress.value = ((_questionIndex.value.toFloat() + 1) / _quiz.value.questions!!.size)
         }
+    }
+
+    fun nextQuestion() {
+        if (_questionIndex.value < _quiz.value.questions!!.size - 1) _questionIndex.value ++
+        _progress.value = ((_questionIndex.value.toFloat() + 1) / _quiz.value.questions!!.size)
+    }
+
+    fun prevQuestion() {
+        if (_questionIndex.value > 0) _questionIndex.value --
+        _progress.value = ((_questionIndex.value.toFloat() + 1) / _quiz.value.questions!!.size)
     }
 
     private suspend fun populateDatabase() {

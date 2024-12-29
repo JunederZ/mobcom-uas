@@ -1,6 +1,7 @@
 package com.example.quizapp.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -23,12 +24,14 @@ import androidx.compose.ui.unit.dp
 fun AnswerOption (
     optionText: String = ""
 ) {
+
+    val clicked = true
     Box (
         modifier = Modifier
 //            .padding(16.dp)
             .clip(MaterialTheme.shapes.medium)
             .border(
-                BorderStroke(1.dp, Color.White),
+                BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
                 MaterialTheme.shapes.large
             )
             .fillMaxWidth()
