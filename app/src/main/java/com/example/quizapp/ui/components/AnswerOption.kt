@@ -20,14 +20,16 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun AnswerOption () {
+fun AnswerOption (
+    optionText: String = ""
+) {
     Box (
         modifier = Modifier
 //            .padding(16.dp)
             .clip(MaterialTheme.shapes.medium)
             .border(
                 BorderStroke(1.dp, Color.White),
-                MaterialTheme.shapes.medium
+                MaterialTheme.shapes.large
             )
             .fillMaxWidth()
             .clickable { println("clicked") }
@@ -36,7 +38,7 @@ fun AnswerOption () {
         ,
         contentAlignment = Alignment.Center
     ){
-        Text("Lorem ipsum dolor sit amet")
+        Text(optionText)
     }
 
 }

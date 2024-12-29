@@ -21,7 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.quizapp.data.models.AnswerOptionEntity
+import com.example.quizapp.data.models.QuestionEntity
 import com.example.quizapp.ui.components.AnswerOption
+import com.example.quizapp.ui.components.Question
 
 
 @Composable
@@ -31,58 +34,16 @@ fun QuestionScreen(
     Column (
         modifier = modifier
             .fillMaxSize()
-//            .background(Color.Red)
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.SpaceBetween
         ) {
-        Box (
-            modifier = modifier
-                .fillMaxWidth(),
-//                .background(Color.Blue),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            Column (
-            )  {
-                Row (
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.Bottom
-
-                ) {
-                    Text("Quiz A", style = MaterialTheme.typography.headlineMedium)
-                    Text("Question 1 of 4")
-                }
-                Spacer(modifier=Modifier.height(8.dp))
-
-
-                LinearProgressIndicator(
-                    modifier = Modifier.fillMaxWidth(),
-                    progress = {0.25f}
-                )
-                Spacer(modifier=Modifier.height(16.dp))
-
-
-                Text("Question Body: Lorem ipsum dolor sit amet", style = MaterialTheme.typography.titleMedium)
-                Spacer(modifier=Modifier.height(16.dp))
-                // answer choice
-                Column (
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    AnswerOption()
-                    AnswerOption()
-                    AnswerOption()
-                    AnswerOption()
-                }
-            }
-
-        }
+        Question()
 
         Row(
             modifier = Modifier
-//                .align(Alignment.BottomCenter)
                 .padding(bottom = 16.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             IconButton(
                 onClick = { /* previous */ }
