@@ -18,19 +18,33 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import com.example.quizapp.data.database.AppDatabase
 import com.example.quizapp.data.models.AnswerOptionEntity
 import com.example.quizapp.data.models.QuestionEntity
 import com.example.quizapp.ui.components.AnswerOption
 import com.example.quizapp.ui.components.Question
+import com.example.quizapp.ui.viewmodels.QuizViewModel
 
 
 @Composable
 fun QuestionScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: QuizViewModel = hiltViewModel(),
 ) {
+
+    val quiz by viewModel.quiz.collectAsState()
+
+    val abc by viewModel.abc.collectAsState()
+
+
+    print(abc)
     Column (
         modifier = modifier
             .fillMaxSize()

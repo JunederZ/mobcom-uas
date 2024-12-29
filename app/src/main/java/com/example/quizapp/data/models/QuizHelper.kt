@@ -6,13 +6,13 @@ import androidx.room.Entity
 import androidx.room.Relation
 
 data class WholeQuiz(
-    @Embedded val quiz: QuizEntity,
+    @Embedded val quiz: QuizEntity?,
     @Relation(
         parentColumn = "uid",
         entityColumn = "quizId",
         entity = QuestionEntity::class
     )
-    val questions: List<WholeQuestion>
+    val questions: List<WholeQuestion>?
 )
 
 data class WholeQuestion(
