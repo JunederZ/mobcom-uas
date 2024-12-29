@@ -7,5 +7,5 @@ import com.example.quizapp.data.models.QuestionEntity
 @Dao
 interface QuestionDao {
     @Insert
-    suspend fun insertQuestion(vararg questionEntity: QuestionEntity): Int
+    suspend fun insertQuestion(questionEntity: QuestionEntity): Long
 }

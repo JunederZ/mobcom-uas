@@ -38,7 +38,6 @@ fun QuestionScreen(
         verticalArrangement = Arrangement.SpaceBetween
         ) {
         Question()
-
         Row(
             modifier = Modifier
                 .padding(bottom = 16.dp)

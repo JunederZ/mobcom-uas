@@ -89,11 +89,11 @@ abstract class AppDatabase : RoomDatabase() {
 
             for ((questionText, answers) in questionsAndAnswers) {
                 val questionId = questionDao.insertQuestion(
-                    QuestionEntity(title = questionText, quizId = quizId)
+                    QuestionEntity(title = questionText, quizId = quizId.toInt())
                 )
 
                 val answerOptions = answers.map { answerText ->
-                    AnswerOptionEntity(questionId = questionId, text = answerText)
+                    AnswerOptionEntity(questionId = questionId.toInt(), text = answerText)
                 }
 
                 answerOptionDao.insertAnswerOption(*answerOptions.toTypedArray())

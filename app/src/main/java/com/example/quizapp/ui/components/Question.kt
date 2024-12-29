@@ -14,8 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.quizapp.ui.screens.options
-import com.example.quizapp.ui.screens.question
 
 @Composable
 fun Question() {
@@ -46,7 +44,7 @@ fun Question() {
 
 
             Text(
-                question.title,
+                "Title",
                 style = MaterialTheme.typography.displayMedium,
 
                 )
@@ -54,8 +52,8 @@ fun Question() {
             Column (
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                options.forEach{ opt ->
-                    AnswerOption(opt.text)
+                listOf("Answer","Answer").forEach{ opt ->
+                    AnswerOption(opt)
                 }
             }
         }

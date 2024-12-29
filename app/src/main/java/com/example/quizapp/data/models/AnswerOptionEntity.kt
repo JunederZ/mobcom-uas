@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(
     foreignKeys = [ForeignKey(
         entity = QuestionEntity::class,
-        parentColumns = arrayOf("id"),
+        parentColumns = arrayOf("uid"),
         childColumns = arrayOf("questionId"),
         onDelete = ForeignKey.CASCADE
     )]

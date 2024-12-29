@@ -1,13 +1,16 @@
 package com.example.quizapp.data.models
 
+import androidx.room.DatabaseView
 import androidx.room.Embedded
+import androidx.room.Entity
 import androidx.room.Relation
 
 data class WholeQuiz(
     @Embedded val quiz: QuizEntity,
     @Relation(
         parentColumn = "uid",
-        entityColumn = "quizId"
+        entityColumn = "quizId",
+        entity = QuestionEntity::class
     )
     val questions: List<WholeQuestion>
 )

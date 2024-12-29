@@ -11,7 +11,7 @@ import com.example.quizapp.data.models.WholeQuiz
 interface QuizDao {
 
     @Insert
-    suspend fun insertQuiz(quizEntity: QuizEntity): Int
+    suspend fun insertQuiz(quizEntity: QuizEntity): Long
 
     @Transaction
     @Query("SELECT * FROM QuizEntity WHERE uid = :quizId")

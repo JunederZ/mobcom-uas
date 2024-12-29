@@ -16,8 +16,6 @@ import com.example.quizapp.ui.screens.QuestionScreen
 import com.example.quizapp.ui.theme.QuizappTheme
 
 class MainActivity : ComponentActivity() {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         val database = AppDatabase.getDatabase(this)
         super.onCreate(savedInstanceState)
@@ -32,12 +30,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
