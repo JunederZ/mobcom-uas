@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
     kotlin("plugin.serialization")
+    id("com.google.dagger.hilt.android")
+
 }
 
 android {
@@ -76,6 +78,10 @@ dependencies {
 
     // Jetpack Compose Integration
     implementation (libs.androidx.navigation.compose)
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.android.compiler)
+
 
 
 //    implementation(libs.)

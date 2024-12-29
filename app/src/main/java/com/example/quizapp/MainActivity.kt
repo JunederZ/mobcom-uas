@@ -14,12 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.quizapp.data.database.AppDatabase
 import com.example.quizapp.ui.screens.QuestionScreen
 import com.example.quizapp.ui.theme.QuizappTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val database = AppDatabase.getDatabase(this)
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             QuizappTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
