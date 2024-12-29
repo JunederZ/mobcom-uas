@@ -10,10 +10,15 @@ import com.example.quizapp.data.models.WholeQuiz
 @Dao
 interface QuizDao {
 
+    @Query("SELECT * FROM QuizEntity")
+    suspend fun getAllQuiz(): List<QuizEntity>
+
     @Insert
     suspend fun insertQuiz(quizEntity: QuizEntity): Long
 
     @Transaction
     @Query("SELECT * FROM QuizEntity WHERE uid = :quizId")
     suspend fun getWholeQuiz(quizId: Int): WholeQuiz
+
+
 }
