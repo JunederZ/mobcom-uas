@@ -23,20 +23,6 @@ object AppModule {
     @Provides
     fun provideAppDatabase(@ApplicationContext app: Context)
             = databaseBuilder(app, AppDatabase::class.java, "db")
-//                .addCallback(object : RoomDatabase.Callback() {
-//                    override fun onCreate(db: SupportSQLiteDatabase) {
-//                        super.onCreate(db)
-//                        val database = databaseBuilder(
-//                            app,
-//                            AppDatabase::class.java,
-//                            "db"
-//                        ).build()
-//
-//                        CoroutineScope(Dispatchers.IO).launch {
-//                            populateDatabase(database)
-//                        }
-//                    }
-//                })
                 .fallbackToDestructiveMigration()
                 .build()
 
