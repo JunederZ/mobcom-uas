@@ -9,7 +9,10 @@ import com.example.quizapp.data.models.QuestionEntity
 interface QuestionDao {
 
     @Query("SELECT * FROM QuestionEntity WHERE quizId = :quizId")
-    suspend fun getQuestionsByQuizId(quizId: Int): List<QuestionEntity>
+    suspend fun getQuestionsByQuizId(quizId: String): List<QuestionEntity>
+
+    @Query("SELECT * FROM QuestionEntity WHERE uid = :questionId")
+    suspend fun getQuestionById(questionId: Int): QuestionEntity
 
     @Insert
     suspend fun insertQuestion(questionEntity: QuestionEntity): Long
