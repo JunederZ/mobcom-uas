@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.quizapp.data.database.AppDatabase
 import com.example.quizapp.ui.navigation.AppNavHost
 import com.example.quizapp.ui.screens.QuestionScreen
+import com.example.quizapp.ui.screens.QuestionListScreen
 import com.example.quizapp.ui.theme.QuizappTheme
 import dagger.hilt.android.AndroidEntryPoint
 
