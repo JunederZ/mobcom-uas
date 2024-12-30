@@ -47,89 +47,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.quizapp.ui.components.QuestionBox
 
 import com.example.quizapp.ui.theme.QuizappTheme
 import com.example.quizapp.ui.viewmodels.HomeViewModel
-
-@Composable
-fun QuestionBox(
-    quizId: Int,
-    showEdit: Boolean = false,
-    navHostController: NavHostController,
-    viewModel: HomeViewModel = hiltViewModel()
-) {
-
-    val navEvent by viewModel.navigationEvents.observeAsState()
-
-    LaunchedEffect(navEvent) {
-        navEvent?.let {
-            navHostController.navigate(it)
-        }
-    }
-
-
-    // Get Quiz Information
-    // ----
-
-    // Box
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .size(32.dp, 128.dp)
-            .padding(8.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Button(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp)),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                contentColor = MaterialTheme.colorScheme.secondary
-            ),
-            shape = RoundedCornerShape(16.dp),
-            onClick = { viewModel.onClicked(quizId) }
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Quiz box $quizId")
-                }
-
-                AnimatedVisibility(
-                    visible = showEdit,
-                ) {
-                    Box(
-                        modifier = Modifier,
-                        contentAlignment = Alignment.Center
-                    ) {
-                        TextButton(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(16.dp)),
-                            onClick = {},
-                            colors = ButtonDefaults.textButtonColors(
-                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            )
-                        ) {
-                            Text("Edit")
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true)
