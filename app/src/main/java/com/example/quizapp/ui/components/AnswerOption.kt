@@ -22,26 +22,47 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AnswerOption (
-    optionText: String = ""
+    optionText: String = "",
+    answerId: Int,
+    questionId: Int,
+    selected: Boolean,
+    onSelect: (Int, Int) -> Unit,
+    isCorrect: Boolean? = null
 ) {
 
-    val clicked = true
-    Box (
+    val backgroundColor = when {
+        isCorrect == true -> MaterialTheme.colorScheme.primaryContainer
+        isCorrect == false && selected -> MaterialTheme.colorScheme.errorContainer
+        selected -> MaterialTheme.colorScheme.primary.copy(0.3f)
+        else -> MaterialTheme.colorScheme.surface
+    }
+
+    val border = when {
+        selected -> MaterialTheme.colorScheme.inversePrimary
+        else -> MaterialTheme.colorScheme.onSurface
+    }
+
+    val textColor = when {
+        isCorrect == true -> MaterialTheme.colorScheme.onPrimaryContainer
+        isCorrect == false -> MaterialTheme.colorScheme.onErrorContainer
+        selected -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.onSurface
+    }
+
+    Box(
         modifier = Modifier
-//            .padding(16.dp)
-            .clip(MaterialTheme.shapes.medium)
+            .clip(MaterialTheme.shapes.large)
             .border(
-                BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
+                BorderStroke(2.dp, border),
                 MaterialTheme.shapes.large
             )
+            .background(backgroundColor)
             .fillMaxWidth()
-            .clickable { println("clicked") }
-            .padding(24.dp)
-
-        ,
+            .clickable { onSelect(questionId, answerId) }
+            .padding(24.dp),
         contentAlignment = Alignment.Center
-    ){
-        Text(optionText)
+    ) {
+        Text(optionText, color = textColor )
     }
 
 }

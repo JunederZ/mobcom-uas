@@ -24,15 +24,20 @@ import com.example.quizapp.ui.viewmodels.QuizViewModel
 fun Question(
     viewModel: QuizViewModel = hiltViewModel()
 ) {
-    val quiz by viewModel.quiz.collectAsState()
     val index by viewModel.questionIndex.collectAsState()
     val progress by viewModel.progress.collectAsState()
-
+    val quiz by viewModel.quiz.collectAsState()
     val title = quiz.quiz!!.title
+
     val length = quiz.questions!!.size
     val question = quiz.questions!![index].question.title
-    val answerOptions = quiz.questions!![index].answerOptions.map { it.text }
 
+    val selectedAnswers by viewModel.selectedAnswers.collectAsState()
+    val isQuizComplete by viewModel.isQuizComplete.collectAsState()
+//    val score by viewModel.score.collectAsState()
+    val currentAnswer by viewModel.currentQuestionAnswer.collectAsState()
+
+    val currentQuestion = quiz.questions?.get(index)
 
     Box (
         modifier = Modifier
@@ -60,17 +65,30 @@ fun Question(
             Spacer(modifier= Modifier.height(24.dp))
 
 
-            Text(
-                question,
-                style = MaterialTheme.typography.titleLarge,
-
+            currentQuestion?.let { wholeQuestion ->
+                Text(
+                    wholeQuestion.question.title,
+                    style = MaterialTheme.typography.titleLarge,
                 )
-            Spacer(modifier= Modifier.height(32.dp))
-            Column (
-                verticalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                answerOptions.forEach{ opt ->
-                    AnswerOption(opt)
+                Spacer(modifier = Modifier.height(32.dp))
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(24.dp)
+                ) {
+                    wholeQuestion.answerOptions.forEach { option ->
+                        val selected = option.uid == currentAnswer
+                        val isCorrect = if (isQuizComplete) {
+                            option.correct
+                        } else null
+
+                        AnswerOption(
+                            optionText = option.text,
+                            answerId = option.uid,
+                            questionId = wholeQuestion.question.uid,
+                            selected = selected,
+                            onSelect = viewModel::selectAnswer,
+                            isCorrect = isCorrect
+                        )
+                    }
                 }
             }
         }

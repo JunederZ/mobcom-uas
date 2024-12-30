@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,45 +49,65 @@ fun QuestionScreen(
 ) {
 
     val quiz by viewModel.quiz.collectAsState()
+    val index by viewModel.questionIndex.collectAsState()
+    val length: Int
 
-    Column (
-        modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+    if (quiz.questions == null) {
+        CircularProgressIndicator()
+    } else {
+        length = quiz.questions!!.size
+        val nextText = if (index + 1 == length) "Finish" else "Next"
+        val nextCallback =
+            if (index + 1 == length) viewModel::finishQuiz else viewModel::nextQuestion
+
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-        if (quiz.questions == null) {
-            CircularProgressIndicator()
-        } else {
             Question()
-        }
-        Row(
-            modifier = Modifier
-                .padding(bottom = 16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            IconButton(
-                onClick = { viewModel.prevQuestion() }
+            Row(
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Icon(
-                    modifier = Modifier.size(48.dp),
-                    imageVector = Icons.Default.KeyboardArrowLeft,
-                    contentDescription = "Previous"
-                )
+//            IconButton(
+//                onClick = { viewModel.prevQuestion() }
+//            ) {
+//                Icon(
+//                    modifier = Modifier.size(48.dp),
+//                    imageVector = Icons.Default.KeyboardArrowLeft,
+//                    contentDescription = "Previous"
+//                )
+//            }
+                Button(
+                    modifier = Modifier,
+                    onClick = { viewModel.prevQuestion() }
+                ) {
+                    Text("Prev")
+                }
+
+//            IconButton(
+//                onClick = { viewModel.nextQuestion() }
+//            ) {
+//                Icon(
+//                    modifier = Modifier.size(48.dp),
+//                    imageVector = Icons.Default.KeyboardArrowRight,
+//                    contentDescription = "Next"
+//                )
+//            }
+                Button(
+                    modifier = Modifier,
+                    onClick = nextCallback
+                ) {
+                    Text(nextText)
+                }
             }
 
-            IconButton(
-                onClick = { viewModel.nextQuestion() }
-            ) {
-                Icon(
-                    modifier = Modifier.size(48.dp),
-                    imageVector = Icons.Default.KeyboardArrowRight,
-                    contentDescription = "Next"
-                )
-            }
         }
-
     }
+
 
 }

@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -42,26 +43,88 @@ class QuizViewModel @Inject constructor(
     )
     val quiz: StateFlow<WholeQuiz> = _quiz
 
+    private val _isQuizComplete = MutableStateFlow(false)
+    val isQuizComplete: StateFlow<Boolean> = _isQuizComplete
+
+    private val _score = MutableStateFlow<Int?>(null)
+    val score: StateFlow<Int?> = _score
+
+    private val _selectedAnswers = MutableStateFlow(mutableMapOf<Int, Int>())
+    val selectedAnswers: StateFlow<Map<Int, Int>> = _selectedAnswers
+
+    private val _currentQuestionAnswer = MutableStateFlow<Int?>(null)
+    val currentQuestionAnswer: StateFlow<Int?> = _currentQuestionAnswer
+
+    fun selectAnswer(questionId: Int, answerOptionId: Int) {
+        _selectedAnswers.value = _selectedAnswers.value.toMutableMap().apply {
+            put(questionId, answerOptionId)
+        }
+        if (quiz.value.questions?.get(questionIndex.value)?.question?.uid == questionId) {
+            _currentQuestionAnswer.value = answerOptionId
+        }
+    }
+
+
+    private fun canFinishQuiz(): Boolean {
+        return _quiz.value.questions?.size == _selectedAnswers.value.size
+    }
+
+    fun finishQuiz() {
+        if (!canFinishQuiz()) return
+
+        viewModelScope.launch {
+            var correctAnswers = 0
+            _quiz.value.questions?.forEach { wholeQuestion ->
+                val selectedAnswerId = _selectedAnswers.value[wholeQuestion.question.uid]
+                val correctAnswer = wholeQuestion.answerOptions.find { it.correct }
+
+                if (selectedAnswerId != null && correctAnswer != null &&
+                    selectedAnswerId == correctAnswer.uid) {
+                    correctAnswers++
+                }
+            }
+
+            _score.value = correctAnswers
+            Log.d("SCORE", _score.value.toString())
+            _isQuizComplete.value = true
+        }
+    }
+
 
     init {
         viewModelScope.launch {
             _quiz.value = quizDao.getWholeQuiz(quizId)
             _progress.value = ((_questionIndex.value.toFloat() + 1) / _quiz.value.questions!!.size)
+            updateCurrentQuestionAnswer()
         }
     }
 
     fun nextQuestion() {
-        if (_questionIndex.value < _quiz.value.questions!!.size - 1) _questionIndex.value ++
+        if (_questionIndex.value < _quiz.value.questions!!.size - 1) {
+            _questionIndex.value++
+            updateCurrentQuestionAnswer()
+        }
         _progress.value = ((_questionIndex.value.toFloat() + 1) / _quiz.value.questions!!.size)
     }
 
     fun prevQuestion() {
-        if (_questionIndex.value > 0) _questionIndex.value --
+        if (_questionIndex.value > 0) {
+            _questionIndex.value--
+            updateCurrentQuestionAnswer()
+        }
         _progress.value = ((_questionIndex.value.toFloat() + 1) / _quiz.value.questions!!.size)
     }
 
+
+    private fun updateCurrentQuestionAnswer() {
+        val currentQuestionId = _quiz.value.questions?.get(_questionIndex.value)?.question?.uid
+        _currentQuestionAnswer.value = currentQuestionId?.let { _selectedAnswers.value[it] }
+    }
+
+
+
     private suspend fun populateDatabase() {
-        val quiz = QuizEntity(title = "General Knowledge Quiz")
+        val quiz = QuizEntity(title = "General Knowledge")
         val quizId = quizDao.insertQuiz(quiz)
 
         val questionsAndAnswers = listOf(
@@ -92,8 +155,13 @@ class QuizViewModel @Inject constructor(
                 QuestionEntity(title = questionText, quizId = quizId.toInt())
             )
 
-            val answerOptions = answers.map { answerText ->
-                AnswerOptionEntity(questionId = questionId.toInt(), text = answerText)
+            val isCorrect = Random.nextInt(0,3)
+            val answerOptions = answers.mapIndexed { index, answerText ->
+                if (isCorrect == index) {
+                    AnswerOptionEntity(questionId = questionId.toInt(), text = answerText, correct = true)
+                } else {
+                    AnswerOptionEntity(questionId = questionId.toInt(), text = answerText)
+                }
             }
 
             answerOptionDao.insertAnswerOption(*answerOptions.toTypedArray())
