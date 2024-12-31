@@ -6,9 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.quizapp.data.dao.AnswerOptionDao
 import com.example.quizapp.data.dao.QuestionDao
+import com.example.quizapp.data.dao.QuizDao
 import com.example.quizapp.data.models.AnswerOptionEntity
 import com.example.quizapp.data.models.QuestionEntity
+import com.example.quizapp.data.models.QuizEntity
 import com.example.quizapp.data.models.WholeQuiz
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +22,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditQuestionViewModel @Inject constructor(
+    private val answerOptionDao: AnswerOptionDao,
     private val questionDao: QuestionDao,
+    private val quizDao: QuizDao,
     private val savedStateHandle: SavedStateHandle,
 ): ViewModel() {
 
@@ -33,17 +39,10 @@ class EditQuestionViewModel @Inject constructor(
     private val _questionList = MutableStateFlow<List<QuestionEntity>>(listOf())
     val questionList: StateFlow<List<QuestionEntity>> = _questionList
 
-
-    private val _selectedAnswers = MutableStateFlow(mutableMapOf<Int, Int>())
-    val selectedAnswers: StateFlow<Map<Int, Int>> = _selectedAnswers
-
     private val _questionIndex = MutableStateFlow(0)
     val questionIndex: StateFlow<Int> = _questionIndex
 
     fun selectAnswer(questionId: Int, answerOptionId: Int) {
-        _selectedAnswers.value = _selectedAnswers.value.toMutableMap().apply {
-            put(questionId, answerOptionId)
-        }
         if (quiz.value?.questions?.get(questionIndex.value)?.question?.uid == questionId) {
             _currentQuestionAnswer.value = answerOptionId
         }
@@ -59,8 +58,22 @@ class EditQuestionViewModel @Inject constructor(
             try {
                 Log.d("EditQuestionVM", "Loading quiz for questionId: $questionId")
                 _quiz.value = questionDao.getQuizByQuestionId(questionId)
+
+                _currentQuestionAnswer.value = quiz.value?.questions?.find { it.question.uid == questionId }?.answerOptions?.find { it.correct }?.uid
             } catch (e: Exception) {
                 Log.e("EditQuizVM", "Error loading quiz", e)
+            }
+        }
+    }
+
+    fun saveQuestion() {
+        viewModelScope.launch {
+            quiz.value?.quiz?.let { quizDao.insertQuiz(it) }
+            quiz.value?.questions?.forEach{ question ->
+                questionDao.insertQuestion(question.question)
+                question.answerOptions.forEach { answerOption ->
+                    answerOptionDao.insertAnswerOption(answerOption)
+                }
             }
         }
     }

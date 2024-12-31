@@ -31,6 +31,7 @@ import com.example.quizapp.data.models.QuestionEntity
 import com.example.quizapp.data.models.WholeQuestion
 import com.example.quizapp.data.models.WholeQuiz
 import com.example.quizapp.ui.components.AnswerOption
+import com.example.quizapp.ui.components.EditAnswerOption
 import com.example.quizapp.ui.components.Question
 import com.example.quizapp.ui.viewmodels.EditQuestionViewModel
 import com.example.quizapp.ui.viewmodels.EditQuizViewModel
@@ -50,14 +51,15 @@ fun EditQuestionScreen(
     when (quiz) {
         null -> CircularProgressIndicator()
         else -> {
-             title = quiz?.quiz?.title ?: ""
+            title = quiz?.quiz?.title ?: ""
             questionAnswers = quiz?.questions?.find { it.question.uid == questionId }
+            Log.d("EditQuestionScreen", questionAnswers.toString())
         }
     }
 
-
-
     val currentAnswer by viewModel.currentQuestionAnswer.collectAsState()
+    Log.d("EditQuestionScreen", currentAnswer.toString())
+
 
     var value by remember { mutableStateOf("Hello\nWorld\nInvisible") }
 
@@ -106,7 +108,7 @@ fun EditQuestionScreen(
                             wholeQuestion?.answerOptions?.forEach { option ->
                                 val selected = option.uid == currentAnswer
 
-                                AnswerOption(
+                                EditAnswerOption(
                                     optionText = option.text,
                                     answerId = option.uid,
                                     questionId = wholeQuestion.question.uid,
