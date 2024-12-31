@@ -58,7 +58,7 @@ fun EditQuestionScreen(
     }
 
     val currentAnswer by viewModel.currentQuestionAnswer.collectAsState()
-    Log.d("EditQuestionScreen", currentAnswer.toString())
+    Log.d("EditQuestionScreen", "Answer: " +  currentAnswer.toString())
 
 
     var value by remember { mutableStateOf("Hello\nWorld\nInvisible") }

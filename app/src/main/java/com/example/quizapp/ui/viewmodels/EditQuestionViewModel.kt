@@ -39,15 +39,26 @@ class EditQuestionViewModel @Inject constructor(
     private val _questionList = MutableStateFlow<List<QuestionEntity>>(listOf())
     val questionList: StateFlow<List<QuestionEntity>> = _questionList
 
+
+    private val _selectedAnswers = MutableStateFlow(mutableMapOf<Int, Int>())
+    val selectedAnswers: StateFlow<Map<Int, Int>> = _selectedAnswers
+
+    private val _correctAnswer = MutableStateFlow<Int?>(null)
+    val correctAnswer: StateFlow<Int?> = _correctAnswer
+
     private val _questionIndex = MutableStateFlow(0)
     val questionIndex: StateFlow<Int> = _questionIndex
 
     fun selectAnswer(questionId: Int, answerOptionId: Int) {
+        Log.d("EditQuestionVM", "Selected answer: $answerOptionId for question: $questionId")
+        _selectedAnswers.value = _selectedAnswers.value.toMutableMap().apply {
+            put(questionId, answerOptionId)
+        }
         if (quiz.value?.questions?.get(questionIndex.value)?.question?.uid == questionId) {
             _currentQuestionAnswer.value = answerOptionId
+            _correctAnswer.value = answerOptionId
         }
     }
-
     val questionId: Int = savedStateHandle.get<String>("questionId")?.toInt() ?: -1
 
     private val _quiz = MutableStateFlow<WholeQuiz?>(null)
