@@ -16,7 +16,7 @@ local.properties
 # built application files
 *.apk
 *.ap_
-
+*google-services.json
 # Mac files
 .DS_Store
 
