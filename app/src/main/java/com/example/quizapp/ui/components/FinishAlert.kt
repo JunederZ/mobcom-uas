@@ -54,7 +54,9 @@ fun FinishAlert(
                         "Proceed to finish the quiz. Double check your answers before continue",
                     )
 
-                    if (viewModel.canFinishQuiz()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    if (!viewModel.canFinishQuiz()) {
                         Text("You haven't answered all question. Finish anyway?")
                     }
 

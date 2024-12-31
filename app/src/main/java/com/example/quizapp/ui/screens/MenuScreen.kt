@@ -138,7 +138,7 @@ fun MainPage(
 //                    QuestionBox(index, showEdit)
 //                }
                 items(quizList.size) { index ->
-                    QuizBox(quizList[index].uid, showEdit, navHostController)
+                    QuizBox(quizList[index], showEdit, navHostController)
                 }
 
             }

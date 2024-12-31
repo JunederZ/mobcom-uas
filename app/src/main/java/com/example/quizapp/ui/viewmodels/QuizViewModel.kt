@@ -2,22 +2,20 @@ package com.example.quizapp.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizapp.data.dao.AnswerOptionDao
 import com.example.quizapp.data.dao.QuestionDao
 import com.example.quizapp.data.dao.QuizDao
-import com.example.quizapp.data.database.AppDatabase
 import com.example.quizapp.data.models.AnswerOptionEntity
 import com.example.quizapp.data.models.QuestionEntity
 import com.example.quizapp.data.models.QuizEntity
-import com.example.quizapp.data.models.WholeQuestion
 import com.example.quizapp.data.models.WholeQuiz
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
@@ -27,10 +25,17 @@ class QuizViewModel @Inject constructor(
     private val quizDao: QuizDao,
     private val questionDao: QuestionDao,
     private val answerOptionDao: AnswerOptionDao,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
 ): ViewModel() {
 
+    private var _navigateToResult = MutableStateFlow(false)
+    var navigateToResult : StateFlow<Boolean> = _navigateToResult.asStateFlow()
+
+    private var _navigateToReview = MutableStateFlow("false")
+    var navigateToReview : StateFlow<String> = _navigateToReview.asStateFlow()
+
     val quizId: Int = savedStateHandle["quizId"]!!
+
 
     private val _questionIndex = MutableStateFlow(0)
     val questionIndex: StateFlow<Int> = _questionIndex
@@ -46,8 +51,12 @@ class QuizViewModel @Inject constructor(
     private val _isQuizComplete = MutableStateFlow(false)
     val isQuizComplete: StateFlow<Boolean> = _isQuizComplete
 
-    private val _score = MutableStateFlow<Float?>(null)
-    val score: StateFlow<Float?> = _score
+    private val _correctCount = MutableStateFlow<Int?>(null)
+    val correctCount: StateFlow<Int?> = _correctCount
+
+    private val _score = MutableStateFlow<Int?>(null)
+    val score: StateFlow<Int?> = _score
+
 
     private val _selectedAnswers = MutableStateFlow(mutableMapOf<Int, Int>())
     val selectedAnswers: StateFlow<Map<Int, Int>> = _selectedAnswers
@@ -77,15 +86,26 @@ class QuizViewModel @Inject constructor(
     }
 
     fun finishModal() {
-        if (!canFinishQuiz()) return
+//        if (!canFinishQuiz()) return
         _dialogVisibility.value = true
 
     }
 
+    fun toResult() {
+        _navigateToReview.value = ""
+        _navigateToResult.value = true
+    }
+
+    fun toReview() {
+        _navigateToResult.value = false
+        _navigateToReview.value = "review"
+    }
+
+    fun toHome() {
+        _navigateToReview.value = "home"
+    }
+
     fun finishQuiz() {
-
-//        viewModelScope
-
 
         viewModelScope.launch {
             var correctAnswers = 0
@@ -99,10 +119,15 @@ class QuizViewModel @Inject constructor(
                 }
             }
 
-            _score.value = correctAnswers.toFloat() / _quiz.value.questions!!.size
+            _correctCount.value = correctAnswers
+            _score.value = Math.round(correctAnswers.toFloat() / _quiz.value.questions!!.size * 100)
             Log.d("SCORE", _score.value.toString())
             _isQuizComplete.value = true
+            _dialogVisibility.value = false
+            _navigateToResult.value = true
+
         }
+
     }
 
 
@@ -138,48 +163,49 @@ class QuizViewModel @Inject constructor(
 
 
 
-    private suspend fun populateDatabase() {
-        val quiz = QuizEntity(title = "General Knowledge")
-        val quizId = quizDao.insertQuiz(quiz)
+//    private suspend fun populateDatabase() {
+//        val quiz = QuizEntity(title = "General Knowledge")
+//        val quizId = quizDao.insertQuiz(quiz)
+//
+//        val questionsAndAnswers = listOf(
+//            "What is the capital of France?" to listOf("Paris", "London", "Berlin", "Rome"),
+//            "What is 2 + 2?" to listOf("3", "4", "5", "6"),
+//            "What is the largest planet?" to listOf("Mars", "Earth", "Jupiter", "Venus"),
+//            "Who wrote 'Romeo and Juliet'?" to listOf(
+//                "Shakespeare",
+//                "Hemingway",
+//                "Austen",
+//                "Tolstoy"
+//            ),
+//            "Which is the longest river in the world?" to listOf(
+//                "Amazon",
+//                "Nile",
+//                "Yangtze",
+//                "Mississippi"
+//            ),
+//            "What is the smallest prime number?" to listOf("1", "2", "3", "5"),
+//            "What color is a ripe banana?" to listOf("Red", "Yellow", "Green", "Blue"),
+//            "What is the square root of 16?" to listOf("2", "4", "8", "16"),
+//            "What is the chemical symbol for water?" to listOf("H2O", "O2", "CO2", "HO2"),
+//            "What is the capital of Japan?" to listOf("Seoul", "Tokyo", "Beijing", "Bangkok")
+//        )
+//
+//        for ((questionText, answers) in questionsAndAnswers) {
+//            val questionId = questionDao.insertQuestion(
+//                QuestionEntity(title = questionText, quizId = quizId.toInt())
+//            )
+//
+//            val isCorrect = Random.nextInt(0,3)
+//            val answerOptions = answers.mapIndexed { index, answerText ->
+//                if (isCorrect == index) {
+//                    AnswerOptionEntity(questionId = questionId.toInt(), text = answerText, correct = true)
+//                } else {
+//                    AnswerOptionEntity(questionId = questionId.toInt(), text = answerText)
+//                }
+//            }
+//
+//            answerOptionDao.insertAnswerOption(*answerOptions.toTypedArray())
+//        }
+//    }
 
-        val questionsAndAnswers = listOf(
-            "What is the capital of France?" to listOf("Paris", "London", "Berlin", "Rome"),
-            "What is 2 + 2?" to listOf("3", "4", "5", "6"),
-            "What is the largest planet?" to listOf("Mars", "Earth", "Jupiter", "Venus"),
-            "Who wrote 'Romeo and Juliet'?" to listOf(
-                "Shakespeare",
-                "Hemingway",
-                "Austen",
-                "Tolstoy"
-            ),
-            "Which is the longest river in the world?" to listOf(
-                "Amazon",
-                "Nile",
-                "Yangtze",
-                "Mississippi"
-            ),
-            "What is the smallest prime number?" to listOf("1", "2", "3", "5"),
-            "What color is a ripe banana?" to listOf("Red", "Yellow", "Green", "Blue"),
-            "What is the square root of 16?" to listOf("2", "4", "8", "16"),
-            "What is the chemical symbol for water?" to listOf("H2O", "O2", "CO2", "HO2"),
-            "What is the capital of Japan?" to listOf("Seoul", "Tokyo", "Beijing", "Bangkok")
-        )
-
-        for ((questionText, answers) in questionsAndAnswers) {
-            val questionId = questionDao.insertQuestion(
-                QuestionEntity(title = questionText, quizId = quizId.toInt())
-            )
-
-            val isCorrect = Random.nextInt(0,3)
-            val answerOptions = answers.mapIndexed { index, answerText ->
-                if (isCorrect == index) {
-                    AnswerOptionEntity(questionId = questionId.toInt(), text = answerText, correct = true)
-                } else {
-                    AnswerOptionEntity(questionId = questionId.toInt(), text = answerText)
-                }
-            }
-
-            answerOptionDao.insertAnswerOption(*answerOptions.toTypedArray())
-        }
-    }
 }

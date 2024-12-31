@@ -4,6 +4,7 @@ sealed class Routes(val route: String) {
     data object MainPage : Routes("home")
     data object Quiz : Routes("quiz/{quizId}")
     data object QuestionListScreen : Routes("edi")
+    data object Result : Routes("result")
     data object EditQuiz : Routes("editQuiz/{quizId}")
     data object EditQuestion : Routes("editQuestion/{questionId}")
 }

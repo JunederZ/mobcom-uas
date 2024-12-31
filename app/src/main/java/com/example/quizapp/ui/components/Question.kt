@@ -31,10 +31,8 @@ fun Question(
 
     val length = quiz.questions!!.size
     val question = quiz.questions!![index].question.title
-
     val selectedAnswers by viewModel.selectedAnswers.collectAsState()
     val isQuizComplete by viewModel.isQuizComplete.collectAsState()
-//    val score by viewModel.score.collectAsState()
     val currentAnswer by viewModel.currentQuestionAnswer.collectAsState()
 
     val currentQuestion = quiz.questions?.get(index)

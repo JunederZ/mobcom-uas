@@ -18,11 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             QuizappTheme {
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    QuestionScreen(
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
-//                }
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
