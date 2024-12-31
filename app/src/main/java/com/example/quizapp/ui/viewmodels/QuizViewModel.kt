@@ -12,6 +12,7 @@ import com.example.quizapp.data.models.AnswerOptionEntity
 import com.example.quizapp.data.models.QuestionEntity
 import com.example.quizapp.data.models.QuizEntity
 import com.example.quizapp.data.models.WholeQuiz
+import com.example.quizapp.data.repositories.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,9 +23,7 @@ import kotlin.random.Random
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
-    private val quizDao: QuizDao,
-    private val questionDao: QuestionDao,
-    private val answerOptionDao: AnswerOptionDao,
+    private val quizRepository: QuizRepository,
     savedStateHandle: SavedStateHandle,
 ): ViewModel() {
 
@@ -133,7 +132,7 @@ class QuizViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _quiz.value = quizDao.getWholeQuiz(quizId)
+            _quiz.value = quizRepository.getWholeQuiz(quizId)
             _progress.value = ((_questionIndex.value.toFloat() + 1) / _quiz.value.questions!!.size)
             updateCurrentQuestionAnswer()
         }

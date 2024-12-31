@@ -11,6 +11,7 @@ import com.example.quizapp.data.models.AnswerOptionEntity
 import com.example.quizapp.data.models.QuestionEntity
 import com.example.quizapp.data.models.QuizEntity
 import com.example.quizapp.data.models.WholeQuiz
+import com.example.quizapp.data.repositories.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,9 +22,7 @@ import kotlin.random.Random
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val quizDao: QuizDao,
-    private val questionDao: QuestionDao,
-    private val answerOptionDao: AnswerOptionDao
+    private val quizRepository: QuizRepository
 ) : ViewModel() {
 
     private val _navigationEvents = MutableLiveData<String>()
@@ -43,7 +42,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _quizList.value = quizDao.getAllQuiz()
+            _quizList.value = quizRepository.getAllQuiz()
         }
     }
 

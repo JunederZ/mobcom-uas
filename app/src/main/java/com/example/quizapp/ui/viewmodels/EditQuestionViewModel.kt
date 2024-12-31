@@ -14,6 +14,7 @@ import com.example.quizapp.data.models.AnswerOptionEntity
 import com.example.quizapp.data.models.QuestionEntity
 import com.example.quizapp.data.models.QuizEntity
 import com.example.quizapp.data.models.WholeQuiz
+import com.example.quizapp.data.repositories.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,9 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditQuestionViewModel @Inject constructor(
-    private val answerOptionDao: AnswerOptionDao,
-    private val questionDao: QuestionDao,
-    private val quizDao: QuizDao,
+    private val quizRepository: QuizRepository,
     private val savedStateHandle: SavedStateHandle,
 ): ViewModel() {
 
@@ -68,7 +67,7 @@ class EditQuestionViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 Log.d("EditQuestionVM", "Loading quiz for questionId: $questionId")
-                _quiz.value = questionDao.getQuizByQuestionId(questionId)
+                _quiz.value = quizRepository.getQuizByQuestionId(questionId)
 
                 _currentQuestionAnswer.value = quiz.value?.questions?.find { it.question.uid == questionId }?.answerOptions?.find { it.correct }?.uid
             } catch (e: Exception) {
@@ -79,11 +78,11 @@ class EditQuestionViewModel @Inject constructor(
 
     fun saveQuestion() {
         viewModelScope.launch {
-            quiz.value?.quiz?.let { quizDao.insertQuiz(it) }
+            quiz.value?.quiz?.let { quizRepository.insertQuiz(it) }
             quiz.value?.questions?.forEach{ question ->
-                questionDao.insertQuestion(question.question)
+                quizRepository.insertQuestion(question.question)
                 question.answerOptions.forEach { answerOption ->
-                    answerOptionDao.insertAnswerOption(answerOption)
+                    quizRepository.insertAnswerOption(answerOption)
                 }
             }
         }

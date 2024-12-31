@@ -11,6 +11,7 @@ import com.example.quizapp.data.models.AnswerOptionEntity
 import com.example.quizapp.data.models.QuestionEntity
 import com.example.quizapp.data.models.QuizEntity
 import com.example.quizapp.data.models.WholeQuiz
+import com.example.quizapp.data.repositories.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditQuizViewModel @Inject constructor(
-    private val questionDao: QuestionDao,
+    private val quizRepository: QuizRepository,
     private val savedStateHandle: SavedStateHandle,
 ): ViewModel() {
 
@@ -33,7 +34,7 @@ class EditQuizViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _questionList.value = questionDao.getQuestionsByQuizId(quizId)
+            _questionList.value = quizRepository.getQuestionsByQuizId(quizId)
         }
     }
 
