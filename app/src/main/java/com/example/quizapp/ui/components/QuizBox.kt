@@ -25,11 +25,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.quizapp.data.models.QuizEntity
 import com.example.quizapp.ui.viewmodels.HomeViewModel
 
 @Composable
 fun QuizBox(
-    quizId: Int,
+    quiz: QuizEntity,
     showEdit: Boolean = false,
     navHostController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
@@ -65,7 +66,7 @@ fun QuizBox(
                 contentColor = MaterialTheme.colorScheme.secondary
             ),
             shape = RoundedCornerShape(16.dp),
-            onClick = { viewModel.onClicked(quizId) }
+            onClick = { viewModel.onClicked(quiz.uid) }
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -78,7 +79,7 @@ fun QuizBox(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("Quiz box $quizId")
+                    Text(quiz.title)
                 }
 
                 AnimatedVisibility(
@@ -92,7 +93,7 @@ fun QuizBox(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(16.dp)),
-                            onClick = { navHostController.navigate("editQuiz/$quizId") },
+                            onClick = { navHostController.navigate("editQuiz/${quiz.uid}") },
                             colors = ButtonDefaults.textButtonColors(
                                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                 containerColor = MaterialTheme.colorScheme.surfaceVariant,

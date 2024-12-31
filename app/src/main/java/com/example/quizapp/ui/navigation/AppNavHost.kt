@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.quizapp.ui.screens.EditQuestionScreen
 import com.example.quizapp.ui.screens.EditQuizScreen
 import com.example.quizapp.ui.screens.MainPage
 import com.example.quizapp.ui.screens.QuestionScreen
@@ -34,6 +35,16 @@ fun AppNavHost(navController: NavHostController) {
                 }
             }
         }
+
+        composable (Routes.EditQuestion.route) { navBackStackEntry ->
+            val quizId = navBackStackEntry.arguments?.getString("questionId")
+            quizId?.let {
+                quizId.toIntOrNull()?.let { it1 ->
+                    EditQuestionScreen(it1)
+                }
+            }
+        }
+
         composable(Routes.MainPage.route) {
             MainPage(navController)
         }
