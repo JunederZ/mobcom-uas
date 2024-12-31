@@ -46,14 +46,18 @@ class QuizViewModel @Inject constructor(
     private val _isQuizComplete = MutableStateFlow(false)
     val isQuizComplete: StateFlow<Boolean> = _isQuizComplete
 
-    private val _score = MutableStateFlow<Int?>(null)
-    val score: StateFlow<Int?> = _score
+    private val _score = MutableStateFlow<Float?>(null)
+    val score: StateFlow<Float?> = _score
 
     private val _selectedAnswers = MutableStateFlow(mutableMapOf<Int, Int>())
     val selectedAnswers: StateFlow<Map<Int, Int>> = _selectedAnswers
 
     private val _currentQuestionAnswer = MutableStateFlow<Int?>(null)
     val currentQuestionAnswer: StateFlow<Int?> = _currentQuestionAnswer
+
+    private val _dialogVisibility = MutableStateFlow(false)
+    val dialogVisibility: StateFlow<Boolean> = _dialogVisibility
+
 
     fun selectAnswer(questionId: Int, answerOptionId: Int) {
         _selectedAnswers.value = _selectedAnswers.value.toMutableMap().apply {
@@ -64,13 +68,24 @@ class QuizViewModel @Inject constructor(
         }
     }
 
+    fun dismissDialog() {
+        _dialogVisibility.value = false
+    }
 
-    private fun canFinishQuiz(): Boolean {
+    fun canFinishQuiz(): Boolean {
         return _quiz.value.questions?.size == _selectedAnswers.value.size
     }
 
-    fun finishQuiz() {
+    fun finishModal() {
         if (!canFinishQuiz()) return
+        _dialogVisibility.value = true
+
+    }
+
+    fun finishQuiz() {
+
+//        viewModelScope
+
 
         viewModelScope.launch {
             var correctAnswers = 0
@@ -84,7 +99,7 @@ class QuizViewModel @Inject constructor(
                 }
             }
 
-            _score.value = correctAnswers
+            _score.value = correctAnswers.toFloat() / _quiz.value.questions!!.size
             Log.d("SCORE", _score.value.toString())
             _isQuizComplete.value = true
         }

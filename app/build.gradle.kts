@@ -5,6 +5,7 @@ plugins {
     id("com.google.devtools.ksp")
     kotlin("plugin.serialization")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 
 }
 
@@ -66,18 +67,14 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
 
-    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
-    // See Add the KSP plugin to your project
     ksp(libs.androidx.room.compiler)
 
+    implementation(platform(libs.firebase.bom))
     // If this project only uses Java source, use the Java annotationProcessor
     // No additional plugins are necessary
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-
-
-    // Jetpack Compose Integration
     implementation (libs.androidx.navigation.compose)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)

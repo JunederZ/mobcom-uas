@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.quizapp.ui.components.QuestionBox
+import com.example.quizapp.ui.components.QuizBox
 
 import com.example.quizapp.ui.theme.QuizappTheme
 import com.example.quizapp.ui.viewmodels.HomeViewModel
@@ -137,7 +138,7 @@ fun MainPage(
 //                    QuestionBox(index, showEdit)
 //                }
                 items(quizList.size) { index ->
-                    QuestionBox(quizList[index].uid, showEdit, navHostController)
+                    QuizBox(quizList[index].uid, showEdit, navHostController)
                 }
 
             }

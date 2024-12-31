@@ -8,12 +8,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.quizapp.ui.screens.EditQuizScreen
 import com.example.quizapp.ui.screens.MainPage
-import com.example.quizapp.ui.screens.QuestionScreen
+import com.example.quizapp.ui.screens.QuizScreen
 import com.example.quizapp.ui.screens.QuestionListScreen
+
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
-    val initialRoute = "edi"
+    val initialRoute = "home"
 
     NavHost(navController, startDestination = initialRoute) {
         composable(
@@ -25,7 +26,7 @@ fun AppNavHost(navController: NavHostController) {
             )
         ) { backStackEntry ->
             val quizId = backStackEntry.arguments!!.getInt("quizId")
-            QuestionScreen(quizId)
+            QuizScreen(quizId)
         }
         composable (Routes.EditQuiz.route) { navBackStackEntry ->
             val quizId = navBackStackEntry.arguments?.getString("quizId")
