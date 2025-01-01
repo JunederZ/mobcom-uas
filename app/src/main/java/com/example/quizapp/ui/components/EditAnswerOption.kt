@@ -27,7 +27,7 @@ fun EditAnswerOption (
     questionId: Int,
     selected: Boolean,
     onSelect: (Int, Int) -> Unit,
-    isCorrect: Boolean? = null
+    isCorrect: Boolean? = null,
 ) {
 
     val backgroundColor = when {

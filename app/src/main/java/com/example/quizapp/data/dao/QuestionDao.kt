@@ -2,8 +2,10 @@ package com.example.quizapp.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.example.quizapp.data.models.AnswerOptionEntity
 import com.example.quizapp.data.models.QuestionEntity
 import com.example.quizapp.data.models.QuizEntity
@@ -12,7 +14,9 @@ import com.example.quizapp.data.models.WholeQuiz
 @Dao
 interface QuestionDao {
 
-    // get quiz from questionId
+    @Update
+    suspend fun updateQuestion(questionEntity: QuestionEntity)
+
     @Query("SELECT * FROM QuizEntity WHERE uid = (SELECT quizId FROM QuestionEntity WHERE uid = :questionId)")
     suspend fun getQuizByQuestionId(questionId: Int): WholeQuiz
 

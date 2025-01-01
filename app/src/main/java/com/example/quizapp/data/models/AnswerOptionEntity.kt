@@ -15,7 +15,7 @@ import androidx.room.PrimaryKey
 data class AnswerOptionEntity (
     @PrimaryKey(autoGenerate = true)
     var uid: Int = 0,
-    val correct: Boolean = false,
+    var correct: Boolean = false,
     val questionId: Int,
     val text: String
 )

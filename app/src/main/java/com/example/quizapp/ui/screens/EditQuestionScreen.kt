@@ -6,19 +6,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -26,42 +28,48 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.quizapp.data.models.AnswerOptionEntity
-import com.example.quizapp.data.models.QuestionEntity
+import androidx.navigation.NavHostController
 import com.example.quizapp.data.models.WholeQuestion
-import com.example.quizapp.data.models.WholeQuiz
-import com.example.quizapp.ui.components.AnswerOption
 import com.example.quizapp.ui.components.EditAnswerOption
-import com.example.quizapp.ui.components.Question
 import com.example.quizapp.ui.viewmodels.EditQuestionViewModel
-import com.example.quizapp.ui.viewmodels.EditQuizViewModel
-import com.example.quizapp.ui.viewmodels.QuizViewModel
 
 @Composable
 fun EditQuestionScreen(
     questionId: Int,
+    navHostController: NavHostController,
     viewModel: EditQuestionViewModel = hiltViewModel(),
 ) {
 
     val quiz by viewModel.quiz.collectAsState(initial = null)
-    var title: String = null.toString()
+    val title by viewModel.title.observeAsState()
+    val questionText by viewModel.questionText.observeAsState()
     var questionAnswers: WholeQuestion? = null
+
+//    var question by remember { mutableStateOf(wholeQuestion?.question?.title) }
+    var question by remember { mutableStateOf("") }
+//    val optionText by remember { mutableStateOf(option.text) }
+    var optionText by remember { mutableStateOf("") }
+
+    LaunchedEffect(quiz) {
+            quiz?.questions?.find { it.question.uid == questionId }?.let { wholeQuestion ->
+            if (question.isEmpty()) {  // Only set if empty to prevent overwriting user input
+                question = wholeQuestion.question.title
+            }
+            questionAnswers = wholeQuestion
+        }
+    }
 
 
     when (quiz) {
         null -> CircularProgressIndicator()
         else -> {
-            title = quiz?.quiz?.title ?: ""
+            val tempTitle = quiz?.quiz?.title ?: ""
+            viewModel.updateTitle(tempTitle)
             questionAnswers = quiz?.questions?.find { it.question.uid == questionId }
-            Log.d("EditQuestionScreen", questionAnswers.toString())
         }
     }
 
     val currentAnswer by viewModel.currentQuestionAnswer.collectAsState()
-    Log.d("EditQuestionScreen", "Answer: " +  currentAnswer.toString())
-
-
-    var value by remember { mutableStateOf("Hello\nWorld\nInvisible") }
 
     if (quiz?.questions == null) {
         CircularProgressIndicator()
@@ -71,45 +79,54 @@ fun EditQuestionScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box (
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.TopCenter
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                contentAlignment = Alignment.BottomCenter
             ) {
-                Column (
-                )  {
-                    Row (
+                Column(
+                    modifier = Modifier.fillMaxHeight()
+                ) {
+                    Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.Bottom
 
                     ) {
-                        Text(title)
+                        Text(question)
                     }
-                    Spacer(modifier= Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
 
-                    Spacer(modifier= Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
 
                     questionAnswers.let { wholeQuestion ->
-                        if (wholeQuestion != null) {
-                            Text(
-                                wholeQuestion.question.title,
-                                style = MaterialTheme.typography.titleLarge,
-                            )
-                        }
+                        TextField(
+                            question,
+                            onValueChange = { newText ->
+                                question = newText
+                            },
+                            textStyle = MaterialTheme.typography.titleLarge,
+                        )
+
+
+                        viewModel.updateQuestionText(wholeQuestion?.question?.title ?: "")
+
                         Spacer(modifier = Modifier.height(32.dp))
                         Column(
                             verticalArrangement = Arrangement.spacedBy(24.dp)
                         ) {
                             wholeQuestion?.answerOptions?.forEach { option ->
                                 val selected = option.uid == currentAnswer
+                                optionText = option.text
 
                                 EditAnswerOption(
-                                    optionText = option.text,
+                                    optionText = optionText,
                                     answerId = option.uid,
                                     questionId = wholeQuestion.question.uid,
                                     selected = selected,
@@ -117,6 +134,17 @@ fun EditQuestionScreen(
                                 )
                             }
                         }
+                    }
+                    TextButton(
+                        onClick = {
+                            Log.d("EditQuestionScreen", "Saving question: $question")
+                            viewModel.updateQuestionText(question)
+                            viewModel.saveQuestion()
+                            navHostController.popBackStack()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text("Save")
                     }
                 }
 

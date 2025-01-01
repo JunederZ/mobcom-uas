@@ -8,6 +8,10 @@ import com.example.quizapp.data.models.AnswerOptionEntity
 
 @Dao
 interface AnswerOptionDao {
+
+    @Update
+    suspend fun updateAnswerOption(answerOptionEntity: AnswerOptionEntity)
+
     @Insert
     suspend fun insertAnswerOption(vararg answerOptionEntity: AnswerOptionEntity)
 }

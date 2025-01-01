@@ -15,6 +15,6 @@ import androidx.room.PrimaryKey
 data class QuestionEntity (
     @PrimaryKey(autoGenerate = true)
     var uid: Int = 0,
-    val title: String,
+    var title: String,
     val quizId: Int
 )
