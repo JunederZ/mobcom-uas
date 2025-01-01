@@ -1,6 +1,6 @@
 package com.example.quizapp.ui.screens
 
-import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,53 +41,57 @@ fun EditQuizScreen(
     navController: NavController,
     viewModel: EditQuizViewModel = hiltViewModel()
 ) {
+
     val questionList by viewModel.questionList.collectAsState()
+    val navEvent by viewModel.navigationEvents.collectAsState(initial = null)
+
+    LaunchedEffect(navEvent) {
+        navEvent?.let { route ->
+            navController.navigate(route)
+            viewModel.onNavigationHandled()
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.refresh()
     }
 
-    QuizappTheme (darkTheme = true) {
+    QuizappTheme(darkTheme = true) {
 
-        Scaffold (
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text(
-                            text = "Quzap",
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    },
-                    modifier = Modifier,
-                    colors = TopAppBarColors(
-                        MaterialTheme.colorScheme.primaryContainer,
-                        scrolledContainerColor = Color.Black,
-                        navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                        titleContentColor = Color.Black,
-                        actionIconContentColor = Color.Black
-                    ),
-                    scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-                )
-            }
-        ) { innerPadding ->
+        Scaffold(topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Quzap",
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }, modifier = Modifier, colors = TopAppBarColors(
+                    MaterialTheme.colorScheme.primaryContainer,
+                    scrolledContainerColor = Color.Black,
+                    navigationIconContentColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = Color.Black,
+                    actionIconContentColor = Color.Black
+                ), scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+            )
+        }) { innerPadding ->
 
-            Box (
-                modifier = Modifier.padding(innerPadding).fillMaxHeight().fillMaxWidth(),
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxHeight()
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.TopCenter,
             ) {
                 LazyVerticalGrid(
                     columns = GridCells.FixedSize(480.dp)
                 ) {
                     items(questionList.size) { index ->
-                        QuestionBox(questionList[index], navController)
+                        QuestionBox(questionList[index])
                     }
 
                 }
-                TextButton(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    onClick = {}
-                ) {
+                TextButton(modifier = Modifier.align(Alignment.BottomCenter), onClick = {}) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "add",
@@ -96,7 +100,6 @@ fun EditQuizScreen(
                     Text("Add Question")
                 }
             }
-
 
 
         }

@@ -1,26 +1,19 @@
 package com.example.quizapp.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -34,38 +27,45 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.quizapp.ui.components.QuestionBox
 import com.example.quizapp.ui.components.QuizBox
 
 import com.example.quizapp.ui.theme.QuizappTheme
 import com.example.quizapp.ui.viewmodels.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
-//@Preview(showBackground = true)
 @Composable
 fun MainPage(
     navHostController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    var showEdit by remember { mutableStateOf(false) }
+    viewModel.populateDatabase()
 
+    var showEdit by remember { mutableStateOf(false) }
     val quizList by viewModel.quizList.collectAsState()
 
-    QuizappTheme  {
+    val navEvent by viewModel.navigationEvents.collectAsState(initial = "")
+
+    LaunchedEffect(navEvent) {
+        navEvent?.let {
+            navHostController.navigate(it)
+            viewModel.onNavigated()
+        }
+    }
+
+    QuizappTheme(
+        darkTheme = true,
+    ) {
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -92,17 +92,16 @@ fun MainPage(
                     modifier = Modifier.fillMaxWidth(),
                     containerColor = Color.Transparent,
                 ) {
-                    Row (
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight()
                             .align(Alignment.CenterVertically),
-//                        horizontalAlignment = Alignment.CenterHorizontally,
-//                        verticalArrangement = Arrangement.Center
+
                         horizontalArrangement = Arrangement.SpaceAround,
                         verticalAlignment = Alignment.CenterVertically,
 
-                    ) {
+                        ) {
                         TextButton(
                             onClick = {},
                             modifier = Modifier.background(Color.Black, RoundedCornerShape(100.dp))
@@ -115,7 +114,7 @@ fun MainPage(
                             Text("Add New Quiz", color = Color.White)
                         }
                         TextButton(
-                            onClick = {showEdit = !showEdit},
+                            onClick = { showEdit = !showEdit },
                             modifier = Modifier.background(Color.Black, RoundedCornerShape(100.dp))
                         ) {
                             Icon(
@@ -134,11 +133,8 @@ fun MainPage(
                 columns = GridCells.Adaptive(minSize = 200.dp),
                 modifier = Modifier.padding(innerPadding)
             ) {
-//                items(12) { index ->
-//                    QuestionBox(index, showEdit)
-//                }
-                items(quizList.size) { index ->
-                    QuizBox(quizList[index], showEdit, navHostController)
+                items(quizList.size, key = {quizList[it].uid}) { index ->
+                    QuizBox(quizList[index], showEdit)
                 }
 
             }

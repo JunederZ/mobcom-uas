@@ -13,9 +13,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,25 +25,9 @@ import com.example.quizapp.ui.viewmodels.EditQuizViewModel
 @Composable
 fun QuestionBox(
     question: QuestionEntity,
-    navHostController: NavController,
     viewModel: EditQuizViewModel = hiltViewModel()
 ) {
 
-    val navEvent by viewModel.navigationEvents.observeAsState()
-
-//    val answers by viewModel.answers.collectAsState()
-//
-//    LaunchedEffect(question.uid) {
-//        viewModel.getAsnwerOptionsByQuestionId(question.uid)
-//    }
-
-    LaunchedEffect(navEvent) {
-        navEvent?.let {
-            navHostController.navigate(it)
-        }
-    }
-
-    // Box
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -65,10 +46,12 @@ fun QuestionBox(
                 contentColor = MaterialTheme.colorScheme.secondary
             ),
             shape = RoundedCornerShape(16.dp),
-            onClick = { navHostController.navigate("editQuestion/${question.uid}") }
+            onClick = { viewModel.navigateToEditQuestion(question.uid) }
         ) {
             Column(
-                modifier = Modifier.fillMaxSize().fillMaxHeight(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

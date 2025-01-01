@@ -1,7 +1,6 @@
 package com.example.quizapp.ui.screens
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,34 +44,39 @@ fun EditQuestionScreen(
     val quiz by viewModel.quiz.collectAsState(initial = null)
     var questionAnswers: WholeQuestion? = null
     val currentAnswer by viewModel.currentQuestionAnswer.collectAsState()
-
     var question by remember { mutableStateOf("") }
     var optionTexts by remember { mutableStateOf(mutableMapOf<Int, String>()) }
+    val navEvent by viewModel.navigationEvents.observeAsState()
 
-    LaunchedEffect(quiz) {
-            quiz?.questions?.find { it.question.uid == questionId }?.let { wholeQuestion ->
-                if (question.isEmpty()) {
-                    question = wholeQuestion.question.title
-                }
-                wholeQuestion.answerOptions.forEach { option ->
-                    optionTexts = optionTexts.toMutableMap().apply {
-                        put(option.uid, option.text)
-                    }
-                }
-                questionAnswers = wholeQuestion
+    LaunchedEffect(navEvent) {
+        navEvent?.let {
+            when (it) {
+                "back" -> navHostController.popBackStack()
+                else -> navHostController.navigate(it)
+            }
         }
     }
 
+    LaunchedEffect(quiz) {
+        quiz?.questions?.find { it.question.uid == questionId }?.let { wholeQuestion ->
+            if (question.isEmpty()) {
+                question = wholeQuestion.question.title
+            }
+            wholeQuestion.answerOptions.forEach { option ->
+                optionTexts = optionTexts.toMutableMap().apply {
+                    put(option.uid, option.text)
+                }
+            }
+            questionAnswers = wholeQuestion
+        }
+    }
 
     when (quiz) {
         null -> CircularProgressIndicator()
         else -> {
-            val tempTitle = quiz?.quiz?.title ?: ""
-            viewModel.updateTitle(tempTitle)
             questionAnswers = quiz?.questions?.find { it.question.uid == questionId }
         }
     }
-
 
     if (quiz?.questions == null) {
         CircularProgressIndicator()
@@ -117,7 +121,6 @@ fun EditQuestionScreen(
                             textStyle = MaterialTheme.typography.titleLarge,
                         )
 
-
                         viewModel.updateQuestionText(wholeQuestion?.question?.title ?: "")
 
                         Spacer(modifier = Modifier.height(32.dp))
@@ -146,9 +149,7 @@ fun EditQuestionScreen(
                     }
                     TextButton(
                         onClick = {
-                            viewModel.updateQuestionText(question)
-                            viewModel.saveQuestion()
-                            navHostController.popBackStack()
+                            viewModel.saveAndGoBack(question)
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
@@ -163,24 +164,6 @@ fun EditQuestionScreen(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-//            IconButton(
-//                onClick = { viewModel.prevQuestion() }
-//            ) {
-//                Icon(
-//                    modifier = Modifier.size(48.dp),
-//                    imageVector = Icons.Default.KeyboardArrowLeft,
-//                    contentDescription = "Previous"
-//                )
-//            }
-//            IconButton(
-//                onClick = { viewModel.nextQuestion() }
-//            ) {
-//                Icon(
-//                    modifier = Modifier.size(48.dp),
-//                    imageVector = Icons.Default.KeyboardArrowRight,
-//                    contentDescription = "Next"
-//                )
-//            }
             }
 
         }
