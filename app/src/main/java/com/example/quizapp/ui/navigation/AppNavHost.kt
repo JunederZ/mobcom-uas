@@ -30,23 +30,14 @@ fun AppNavHost(navController: NavHostController) {
                 }
             )
         ) { backStackEntry ->
-//            val viewModel: QuizViewModel =
-//                if (navController.previousBackStackEntry != null) hiltViewModel(
-//                    navController.previousBackStackEntry!!
-//                ) else hiltViewModel(backStackEntry)
             val parentEntry = remember(backStackEntry) {
                 navController.getBackStackEntry(Routes.Quiz.route)
             }
             val viewModel: QuizViewModel = hiltViewModel(parentEntry)
-//            val viewModel: QuizViewModel = hiltViewModel(backStackEntry)
             val quizId = backStackEntry.arguments!!.getInt("quizId")
             QuizScreen(quizId, navController, viewModel=viewModel)
         }
         composable(Routes.Result.route) { backStackEntry ->
-//            val viewModel: QuizViewModel =
-//                if (navController.previousBackStackEntry != null) hiltViewModel(
-//                    navController.previousBackStackEntry!!
-//                ) else hiltViewModel()
             val parentEntry = remember(backStackEntry) {
                 navController.getBackStackEntry(Routes.Quiz.route)
             }
@@ -74,8 +65,12 @@ fun AppNavHost(navController: NavHostController) {
         composable(Routes.MainPage.route) {
             MainPage(navController)
         }
-        composable(Routes.QuestionListScreen.route) {
-            QuestionListScreen(onBackClick = { /* Handle back navigation */ })
+        composable(Routes.QuestionListScreen.route) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.Quiz.route)
+            }
+            val viewModel: QuizViewModel = hiltViewModel(parentEntry)
+            QuestionListScreen(viewModel=viewModel)
         }
 
     }

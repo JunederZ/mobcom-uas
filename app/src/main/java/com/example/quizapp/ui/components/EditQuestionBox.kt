@@ -1,8 +1,10 @@
 package com.example.quizapp.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,50 +25,25 @@ import androidx.navigation.NavController
 import com.example.quizapp.data.models.QuestionEntity
 import com.example.quizapp.ui.viewmodels.EditQuizViewModel
 
+
 @Composable
 fun QuestionBox(
     question: QuestionEntity,
     viewModel: EditQuizViewModel = hiltViewModel()
 ) {
-
-    Box(
+    Card(
         modifier = Modifier
-            .fillMaxSize()
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(8.dp),
-        contentAlignment = Alignment.Center
+            .aspectRatio(1f)
+            .clickable { viewModel.navigateToEditQuestion(question.uid) }
     ) {
-        Button(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp)),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                contentColor = MaterialTheme.colorScheme.secondary
-            ),
-            shape = RoundedCornerShape(16.dp),
-            onClick = { viewModel.navigateToEditQuestion(question.uid) }
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        question.title
-                    )
-                }
-
-            }
+            Text(
+                text = question.uid.toString(),
+                style = MaterialTheme.typography.titleLarge
+            )
         }
     }
 }

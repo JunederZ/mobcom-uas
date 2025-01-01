@@ -73,9 +73,15 @@ fun QuizScreen(
             ) {
                 Button(
                     modifier = Modifier,
-                    onClick = { viewModel.prevQuestion() }
+                    onClick = viewModel::prevQuestion
                 ) {
                     Text("Prev")
+                }
+                Button(
+                    modifier = Modifier,
+                    onClick = {  }
+                ) {
+                    Text("Questions")
                 }
                 Button(
                     modifier = Modifier,

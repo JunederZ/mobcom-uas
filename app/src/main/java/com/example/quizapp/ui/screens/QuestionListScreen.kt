@@ -14,36 +14,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.quizapp.ui.viewmodels.QuizViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionListScreen(
-    onBackClick: () -> Unit,
-    title: String = "Untitled Quiz"
+    title: String = "Untitled Quiz",
+    viewModel: QuizViewModel = hiltViewModel()
 ) {
-    var numbers by remember { mutableStateOf(List(7) { it + 1 }) }
+
+    val quiz by viewModel.quiz.collectAsState()
+    val length = quiz.questions!!.size
+    val numbers by remember { mutableStateOf(List(7) { it + 1 }) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(title) },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = {  }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    numbers = numbers + (numbers.size + 1)
-                }
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add number")
-            }
-        }
     ) { paddingValues ->
         Box(
             modifier = Modifier
