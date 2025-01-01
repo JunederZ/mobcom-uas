@@ -1,5 +1,6 @@
 package com.example.quizapp.ui.screens
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +34,7 @@ import com.example.quizapp.data.models.WholeQuestion
 import com.example.quizapp.ui.components.EditAnswerOption
 import com.example.quizapp.ui.viewmodels.EditQuestionViewModel
 
+@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun EditQuestionScreen(
     questionId: Int,
@@ -41,21 +43,23 @@ fun EditQuestionScreen(
 ) {
 
     val quiz by viewModel.quiz.collectAsState(initial = null)
-    val title by viewModel.title.observeAsState()
-    val questionText by viewModel.questionText.observeAsState()
     var questionAnswers: WholeQuestion? = null
+    val currentAnswer by viewModel.currentQuestionAnswer.collectAsState()
 
-//    var question by remember { mutableStateOf(wholeQuestion?.question?.title) }
     var question by remember { mutableStateOf("") }
-//    val optionText by remember { mutableStateOf(option.text) }
-    var optionText by remember { mutableStateOf("") }
+    var optionTexts by remember { mutableStateOf(mutableMapOf<Int, String>()) }
 
     LaunchedEffect(quiz) {
             quiz?.questions?.find { it.question.uid == questionId }?.let { wholeQuestion ->
-            if (question.isEmpty()) {  // Only set if empty to prevent overwriting user input
-                question = wholeQuestion.question.title
-            }
-            questionAnswers = wholeQuestion
+                if (question.isEmpty()) {
+                    question = wholeQuestion.question.title
+                }
+                wholeQuestion.answerOptions.forEach { option ->
+                    optionTexts = optionTexts.toMutableMap().apply {
+                        put(option.uid, option.text)
+                    }
+                }
+                questionAnswers = wholeQuestion
         }
     }
 
@@ -69,7 +73,6 @@ fun EditQuestionScreen(
         }
     }
 
-    val currentAnswer by viewModel.currentQuestionAnswer.collectAsState()
 
     if (quiz?.questions == null) {
         CircularProgressIndicator()
@@ -123,21 +126,26 @@ fun EditQuestionScreen(
                         ) {
                             wholeQuestion?.answerOptions?.forEach { option ->
                                 val selected = option.uid == currentAnswer
-                                optionText = option.text
+                                val thisOptionText = optionTexts[option.uid] ?: ""
 
                                 EditAnswerOption(
-                                    optionText = optionText,
+                                    optionText = thisOptionText,
                                     answerId = option.uid,
                                     questionId = wholeQuestion.question.uid,
                                     selected = selected,
                                     onSelect = viewModel::selectAnswer,
+                                    onChange = { newText ->
+                                        optionTexts = optionTexts.toMutableMap().apply {
+                                            put(option.uid, newText)
+                                        }
+                                        viewModel.updateAnswerOption(option.uid, newText)
+                                    },
                                 )
                             }
                         }
                     }
                     TextButton(
                         onClick = {
-                            Log.d("EditQuestionScreen", "Saving question: $question")
                             viewModel.updateQuestionText(question)
                             viewModel.saveQuestion()
                             navHostController.popBackStack()

@@ -44,6 +44,14 @@ class EditQuestionViewModel @Inject constructor(
     private val _answerOptions = MutableLiveData<List<AnswerOptionEntity>>()
     val answerOptions: MutableLiveData<List<AnswerOptionEntity>> = _answerOptions
 
+    fun updateAnswerOption(answerOptionId: Int, newText: String) {
+        viewModelScope.launch {
+            val answerOption = _question.value?.answerOptions?.find { it.uid == answerOptionId }
+            answerOption?.text = newText
+            Log.d("EditQuestionViewModel", "Answer option updated: $answerOption")
+        }
+    }
+
     private val _currentQuestionAnswer = MutableStateFlow<Int?>(null)
     val currentQuestionAnswer: StateFlow<Int?> = _currentQuestionAnswer
 
@@ -58,32 +66,19 @@ class EditQuestionViewModel @Inject constructor(
     private val _quiz = MutableStateFlow<WholeQuiz?>(null)
     val quiz: StateFlow<WholeQuiz?> = _quiz
 
-    private val _refreshTrigger = MutableSharedFlow<Unit>() // Trigger for refreshing
-    val refreshTrigger = _refreshTrigger.asSharedFlow()    // Expose as read-only SharedFlow
-
     fun selectAnswer(_questionId: Int, answerOptionId: Int) {
-        Log.d("EditQuestionVM", "Selected answer: $answerOptionId for question: $questionId")
         if (questionId == _questionId) {
             _currentQuestionAnswer.value = answerOptionId
-            Log.d("EditQuestionVM", "Updating")
             _correctAnswer.value = answerOptionId
         }
-        Log.d("EditQuestionVM", "current: ${currentQuestionAnswer.value}")
-        Log.d("EditQuestionVM", "correctAnswe: ${correctAnswer.value}")
     }
 
     init {
         viewModelScope.launch {
-            try {
-                Log.d("EditQuestionVM", "Loading quiz for questionId: $questionId")
-                _quiz.value = quizRepository.getQuizByQuestionId(questionId)
-                _currentQuestionAnswer.value =
-                    quiz.value?.questions?.find { it.question.uid == questionId }?.answerOptions?.find { it.correct }?.uid
-                _question.value = quiz.value?.questions?.find { it.question.uid == questionId }
-
-            } catch (e: Exception) {
-                Log.e("EditQuizVM", "Error loading quiz", e)
-            }
+            _quiz.value = quizRepository.getQuizByQuestionId(questionId)
+            _currentQuestionAnswer.value =
+                quiz.value?.questions?.find { it.question.uid == questionId }?.answerOptions?.find { it.correct }?.uid
+            _question.value = quiz.value?.questions?.find { it.question.uid == questionId }
         }
     }
 

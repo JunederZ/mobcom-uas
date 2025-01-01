@@ -17,5 +17,5 @@ data class AnswerOptionEntity (
     var uid: Int = 0,
     var correct: Boolean = false,
     val questionId: Int,
-    val text: String
+    var text: String
 )

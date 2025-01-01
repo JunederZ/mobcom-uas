@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 
@@ -27,6 +29,7 @@ fun EditAnswerOption (
     questionId: Int,
     selected: Boolean,
     onSelect: (Int, Int) -> Unit,
+    onChange: (String) -> Unit,
     isCorrect: Boolean? = null,
 ) {
 
@@ -62,7 +65,11 @@ fun EditAnswerOption (
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(optionText, color = textColor )
+        TextField(
+            value = optionText,
+            onValueChange = onChange,
+            textStyle = TextStyle(color = textColor)
+        )
     }
 
 }
