@@ -14,6 +14,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 
+@Immutable
+data class ExtendedColorScheme(
+    val success: ColorFamily,
+)
+
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
@@ -240,6 +245,60 @@ private val highContrastDarkColorScheme = darkColorScheme(
     surfaceContainer = surfaceContainerDarkHighContrast,
     surfaceContainerHigh = surfaceContainerHighDarkHighContrast,
     surfaceContainerHighest = surfaceContainerHighestDarkHighContrast,
+)
+
+val extendedLight = ExtendedColorScheme(
+  success = ColorFamily(
+  successLight,
+  onSuccessLight,
+  successContainerLight,
+  onSuccessContainerLight,
+  ),
+)
+
+val extendedDark = ExtendedColorScheme(
+  success = ColorFamily(
+  successDark,
+  onSuccessDark,
+  successContainerDark,
+  onSuccessContainerDark,
+  ),
+)
+
+val extendedLightMediumContrast = ExtendedColorScheme(
+  success = ColorFamily(
+  successLightMediumContrast,
+  onSuccessLightMediumContrast,
+  successContainerLightMediumContrast,
+  onSuccessContainerLightMediumContrast,
+  ),
+)
+
+val extendedLightHighContrast = ExtendedColorScheme(
+  success = ColorFamily(
+  successLightHighContrast,
+  onSuccessLightHighContrast,
+  successContainerLightHighContrast,
+  onSuccessContainerLightHighContrast,
+  ),
+)
+
+val extendedDarkMediumContrast = ExtendedColorScheme(
+  success = ColorFamily(
+  successDarkMediumContrast,
+  onSuccessDarkMediumContrast,
+  successContainerDarkMediumContrast,
+  onSuccessContainerDarkMediumContrast,
+  ),
+)
+
+val extendedDarkHighContrast = ExtendedColorScheme(
+  success = ColorFamily(
+  successDarkHighContrast,
+  onSuccessDarkHighContrast,
+  successContainerDarkHighContrast,
+  onSuccessContainerDarkHighContrast,
+  ),
 )
 
 @Immutable
