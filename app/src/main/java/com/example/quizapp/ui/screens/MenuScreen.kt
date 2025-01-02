@@ -39,7 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.quizapp.ui.components.QuizBox
 
-import com.example.quizapp.ui.theme.QuizappTheme
+import com.example.quizapp.ui.theme.AppTheme
 import com.example.quizapp.ui.viewmodels.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,25 +106,25 @@ fun MainPage(
                     ) {
                     TextButton(
                         onClick = { viewModel.addNewQuiz() },
-                        modifier = Modifier.background(Color.Black, RoundedCornerShape(100.dp))
+                        modifier = Modifier.background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(100.dp))
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = null,
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.onTertiary
                         )
-                        Text("Add New Quiz", color = Color.White)
+                        Text("Add New Quiz", color = MaterialTheme.colorScheme.onTertiary)
                     }
                     TextButton(
                         onClick = { showEdit = !showEdit },
-                        modifier = Modifier.background(Color.Black, RoundedCornerShape(100.dp))
+                        modifier = Modifier.background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(100.dp))
                     ) {
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = null,
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.onTertiary
                         )
-                        Text("Edit Quiz", color = Color.White)
+                        Text("Edit Quiz", color = MaterialTheme.colorScheme.onTertiary)
                     }
                 }
             }

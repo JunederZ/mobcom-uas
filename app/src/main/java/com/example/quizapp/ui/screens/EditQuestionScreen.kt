@@ -34,7 +34,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.quizapp.data.models.WholeQuestion
 import com.example.quizapp.ui.components.EditAnswerOption
-import com.example.quizapp.ui.theme.QuizappTheme
 import com.example.quizapp.ui.viewmodels.EditQuizViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,8 +87,7 @@ fun EditQuestionScreen(
         CircularProgressIndicator()
     } else {
 
-        QuizappTheme(
-        ) {
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -196,7 +194,7 @@ fun EditQuestionScreen(
                 }
 
             }
-        }
+
     }
 
 

@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.quizapp.ui.components.QuestionBox
-import com.example.quizapp.ui.theme.QuizappTheme
 import com.example.quizapp.ui.viewmodels.EditQuizViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,99 +79,95 @@ fun EditQuizScreen(
     }
 
 
-    QuizappTheme(
-        darkTheme = true
-    ) {
-        Scaffold(topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    TextField(
-                        value = quizTitle,
-                        onValueChange = { quizTitle = it },
-                        textStyle = TextStyle.Default.copy(
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold
-                        )
+    Scaffold(topBar = {
+        CenterAlignedTopAppBar(
+            title = {
+                TextField(
+                    value = quizTitle,
+                    onValueChange = { quizTitle = it },
+                    textStyle = TextStyle.Default.copy(
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
                     )
-                },
-                modifier = Modifier, colors = TopAppBarColors(
-                    MaterialTheme.colorScheme.primaryContainer,
-                    scrolledContainerColor = Color.Black,
-                    navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = Color.Black,
-                    actionIconContentColor = Color.Black
-                ), scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-            )
-        }) { innerPadding ->
+                )
+            },
+            modifier = Modifier, colors = TopAppBarColors(
+                MaterialTheme.colorScheme.primaryContainer,
+                scrolledContainerColor = Color.Black,
+                navigationIconContentColor = MaterialTheme.colorScheme.primary,
+                titleContentColor = Color.Black,
+                actionIconContentColor = Color.Black
+            ), scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        )
+    }) { innerPadding ->
 
-            Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxHeight()
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.TopCenter,
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxHeight()
+                .fillMaxWidth(),
+            contentAlignment = Alignment.TopCenter,
+        ) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(5),
+                contentPadding = PaddingValues(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(5),
-                    contentPadding = PaddingValues(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(questionList.size) { index ->
-                        QuestionBox(questionList[index], index)
-                    }
-
+                items(questionList.size) { index ->
+                    QuestionBox(questionList[index], index)
                 }
-                Row(
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth()
+
+            }
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth()
+            ) {
+                TextButton(
+                    modifier = Modifier,
+                    onClick = { viewModel.addNewQuestion("New Question") }
                 ) {
-                    TextButton(
-                        modifier = Modifier,
-                        onClick = { viewModel.addNewQuestion("New Question") }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "add",
-                            modifier = Modifier
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "add",
+                        modifier = Modifier
+                    )
+                    Text("Add Question")
+                }
+                TextButton(
+                    modifier = Modifier,
+                    onClick = { viewModel.saveQuiz(quizTitle, context) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = "Save",
+                        modifier = Modifier
+                    )
+                    Text("Save")
+                }
+                TextButton(
+                    modifier = Modifier,
+                    onClick = {
+                        viewModel.deleteQuiz(
+                            quizId = viewModel.quizId,
+                            context = context
                         )
-                        Text("Add Question")
                     }
-                    TextButton(
-                        modifier = Modifier,
-                        onClick = { viewModel.saveQuiz(quizTitle, context) }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = "Save",
-                            modifier = Modifier
-                        )
-                        Text("Save")
-                    }
-                    TextButton(
-                        modifier = Modifier,
-                        onClick = {
-                            viewModel.deleteQuiz(
-                                quizId = viewModel.quizId,
-                                context = context
-                            )
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Warning,
-                            contentDescription = "delete",
-                            modifier = Modifier
-                        )
-                        Text("Delete Quiz")
-                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = "delete",
+                        modifier = Modifier
+                    )
+                    Text("Delete Quiz")
                 }
             }
-
-
         }
+
+
     }
 
 
