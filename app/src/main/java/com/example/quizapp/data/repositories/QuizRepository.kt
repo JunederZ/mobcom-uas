@@ -1,7 +1,5 @@
 package com.example.quizapp.data.repositories
 
-import androidx.room.Insert
-import androidx.room.Query
 import com.example.quizapp.data.dao.AnswerOptionDao
 import com.example.quizapp.data.dao.QuestionDao
 import com.example.quizapp.data.dao.QuizDao
@@ -24,8 +22,9 @@ class QuizRepository @Inject constructor(
     suspend fun updateQuestion(questionEntity: QuestionEntity) = questionDao.updateQuestion(questionEntity)
     suspend fun updateAnswerOption(answerOptionEntity: AnswerOptionEntity) = answerOptionDao.updateAnswerOption(answerOptionEntity)
 
-    suspend fun deleteQuestion(questionId: Int) = questionDao.deleteQuestionById(questionId)
-    suspend fun deleteAnswerOption(answerOptionId: Int) = answerOptionDao.deleteAnswerOptionById(answerOptionId)
+    suspend fun deleteQuizById(quizId: Int) = quizDao.deleteQuizById(quizId)
+    suspend fun deleteQuestionById(questionId: Int) = questionDao.deleteQuestionById(questionId)
+    suspend fun deleteAnswerOptionById(answerOptionId: Int) = answerOptionDao.deleteAnswerOptionById(answerOptionId)
 
     suspend fun getQuizByQuestionId(questionId: Int): WholeQuiz =
         questionDao.getQuizByQuestionId(questionId)

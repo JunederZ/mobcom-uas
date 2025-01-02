@@ -1,5 +1,7 @@
 package com.example.quizapp.ui.viewmodels
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizapp.data.models.AnswerOptionEntity
@@ -29,14 +31,33 @@ class HomeViewModel @Inject constructor(
         _navigationEvents.value = "editQuiz/$quizId"
     }
 
-    fun navigateToQuiz(quizId: Int) {
+    fun navigateToQuiz(quizId: Int, context: Context) {
         viewModelScope.launch {
+            val quiz = quizRepository.getWholeQuiz(quizId)
+            if (quiz.questions?.isEmpty() == true) {
+                Toast.makeText(context, "This quiz has no question", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
             _navigationEvents.value = "quiz/$quizId"
+        }
+    }
+
+    fun addNewQuiz() {
+        viewModelScope.launch {
+            val newQuiz = QuizEntity(title = "New Quiz")
+            val newQuizId = quizRepository.insertQuiz(newQuiz)
+            _navigationEvents.value = "editQuiz/$newQuizId"
         }
     }
 
     fun onNavigated() {
         _navigationEvents.value = null
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            _quizList.value = quizRepository.getAllQuiz()
+        }
     }
 
     init {

@@ -49,7 +49,12 @@ fun MainPage(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-//    viewModel.populateDatabase()
+//    viewModel.populateDatabase
+
+    LaunchedEffect(Unit) {
+        viewModel.refresh()
+    }
+
 
     var showEdit by remember { mutableStateOf(false) }
     val quizList by viewModel.quizList.collectAsState()
@@ -103,7 +108,7 @@ fun MainPage(
 
                         ) {
                         TextButton(
-                            onClick = {},
+                            onClick = { viewModel.addNewQuiz() },
                             modifier = Modifier.background(Color.Black, RoundedCornerShape(100.dp))
                         ) {
                             Icon(

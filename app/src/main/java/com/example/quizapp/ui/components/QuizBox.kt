@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -31,6 +32,8 @@ fun QuizBox(
     showEdit: Boolean = false,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -48,7 +51,7 @@ fun QuizBox(
                 contentColor = MaterialTheme.colorScheme.secondary
             ),
             shape = RoundedCornerShape(16.dp),
-            onClick = { viewModel.navigateToQuiz(quiz.uid) }) {
+            onClick = { viewModel.navigateToQuiz(quiz.uid, context) }) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween,

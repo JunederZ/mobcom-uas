@@ -1,5 +1,9 @@
 package com.example.quizapp.ui.viewmodels
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -29,8 +33,8 @@ class EditQuizViewModel @Inject constructor(
     private val _quiz = MutableStateFlow<WholeQuiz?>(null)
     val quiz: StateFlow<WholeQuiz?> = _quiz
 
-    private val _title = MutableLiveData<String>()
-    val title: LiveData<String> = _title
+    private val _title = MutableStateFlow<String>("")
+    val title: StateFlow<String> = _title
 
     private val _questionText = MutableLiveData<String>()
     val questionText: LiveData<String> = _questionText
@@ -60,7 +64,7 @@ class EditQuizViewModel @Inject constructor(
             _currentQuestionAnswer.value =
                 quiz.value?.questions?.find { it.question.uid == questionId }?.answerOptions?.find { it.correct }?.uid
             _question.value = quiz.value?.questions?.find { it.question.uid == questionId }
-            _title.value = quiz.value?.quiz?.title
+            _title.value = quiz.value?.quiz?.title.toString()
         }
     }
 
@@ -82,10 +86,15 @@ class EditQuizViewModel @Inject constructor(
         }
     }
 
-    fun saveAndGoBack(questionText: String) {
+    fun saveAndGoBack(questionText: String, context: Context) {
         viewModelScope.launch {
             updateQuestionText(questionText)
             saveQuestion()
+            Toast.makeText(
+                context,
+                "Question Updated",
+                Toast.LENGTH_SHORT
+            ).show()
             _navigationEvents.emit("back")
         }
     }
@@ -107,6 +116,20 @@ class EditQuizViewModel @Inject constructor(
         }
     }
 
+    fun saveQuiz(title: String, context: Context) {
+        viewModelScope.launch {
+            quiz.value?.quiz?.title = title
+            quiz.value?.let { it.quiz?.let { it1 -> quizRepository.updateQuiz(it1) } }
+            refresh()
+            Toast.makeText(
+                context,
+                "Quiz Updated",
+                Toast.LENGTH_SHORT
+            ).show()
+            _navigationEvents.emit("back")
+        }
+    }
+
     private fun saveQuestion() {
         viewModelScope.launch {
             val newQuiz = quiz.value
@@ -125,14 +148,32 @@ class EditQuizViewModel @Inject constructor(
         }
     }
 
-    fun deleteQuestion(questionId: Int) {
+    fun deleteQuiz(quizId: Int, context: Context) {
+        viewModelScope.launch {
+            quizRepository.deleteQuizById(quizId)
+            refresh()
+            Toast.makeText(
+                context,
+                "Quiz deleted",
+                Toast.LENGTH_SHORT
+            ).show()
+            _navigationEvents.emit("back")
+        }
+    }
+
+    fun deleteQuestion(questionId: Int, context: Context) {
         viewModelScope.launch {
             val question = quiz.value?.questions?.find { it.question.uid == questionId }
             question?.answerOptions?.forEach { answerOption ->
-                quizRepository.deleteAnswerOption(answerOption.uid)
+                quizRepository.deleteAnswerOptionById(answerOption.uid)
             }
-            quizRepository.deleteQuestion(questionId)
+            quizRepository.deleteQuestionById(questionId)
             _questionList.value = quizRepository.getQuestionsByQuizId(quizId)
+            Toast.makeText(
+                context,
+                "Question deleted",
+                Toast.LENGTH_SHORT
+            ).show()
             _navigationEvents.emit("back")
         }
 

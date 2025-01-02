@@ -12,8 +12,14 @@ import com.example.quizapp.data.models.WholeQuiz
 @Dao
 interface QuizDao {
 
+    @Query("DELETE FROM QuizEntity WHERE uid = :quizId")
+    suspend fun deleteQuizById(quizId: Int)
+
     @Update
     suspend fun updateQuiz(quizEntity: QuizEntity)
+
+    @Query("SELECT * FROM QuizEntity WHERE uid = :quizId")
+    suspend fun getQuizById(quizId: Int): QuizEntity
 
     @Query("SELECT * FROM QuizEntity")
     suspend fun getAllQuiz(): List<QuizEntity>
