@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -104,63 +105,67 @@ fun EditQuestionScreen(
                     contentAlignment = Alignment.BottomCenter
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxHeight()
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalArrangement = Arrangement.SpaceBetween
+
                     ) {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.Bottom
+                        Column {
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.Bottom
 
-                        ) {
-                            Text(quiz!!.quiz!!.title, style=MaterialTheme.typography.headlineLarge,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-
-
-                        Spacer(modifier = Modifier.height(24.dp))
+                            ) {
+                                Text(quiz!!.quiz!!.title, style=MaterialTheme.typography.headlineLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
 
 
-                        questionAnswers.let { wholeQuestion ->
-                            TextField(
-                                question,
-                                label = {Text("Question")},
-                                onValueChange = { newText ->
-                                    question = newText
-                                },
-                                textStyle = MaterialTheme.typography.titleLarge,
-                                colors = TextFieldDefaults.colors(
+                            Spacer(modifier = Modifier.height(24.dp))
+
+
+                            questionAnswers.let { wholeQuestion ->
+                                TextField(
+                                    question,
+                                    label = {Text("Question")},
+                                    onValueChange = { newText ->
+                                        question = newText
+                                    },
+                                    textStyle = MaterialTheme.typography.titleLarge,
+                                    colors = TextFieldDefaults.colors(
 //                                    focusedContainerColor = Color.Transparent,
 //                                    unfocusedContainerColor = Color.Transparent,
 //                                    disabledContainerColor = Color.Transparent,
 //                                    errorContainerColor = Color.Transparent,
-                                ),
-                                placeholder = { Text("Enter question body") },
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                                    ),
+                                    placeholder = { Text("Enter question body") },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
 
-                            Spacer(modifier = Modifier.height(32.dp))
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(24.dp)
-                            ) {
-                                wholeQuestion?.answerOptions?.forEach { option ->
-                                    val selected = option.uid == currentAnswer
-                                    val thisOptionText = optionTexts[option.uid] ?: ""
+                                Spacer(modifier = Modifier.height(32.dp))
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(24.dp)
+                                ) {
+                                    wholeQuestion?.answerOptions?.forEach { option ->
+                                        val selected = option.uid == currentAnswer
+                                        val thisOptionText = optionTexts[option.uid] ?: ""
 
-                                    EditAnswerOption(
-                                        optionText = thisOptionText,
-                                        answerId = option.uid,
-                                        questionId = wholeQuestion.question.uid,
-                                        selected = selected,
-                                        onSelect = viewModel::selectAnswer,
-                                        onChange = { newText ->
-                                            optionTexts = optionTexts.toMutableMap().apply {
-                                                put(option.uid, newText)
-                                            }
-                                            viewModel.updateAnswerOption(option.uid, newText)
-                                        },
-                                    )
+                                        EditAnswerOption(
+                                            optionText = thisOptionText,
+                                            answerId = option.uid,
+                                            questionId = wholeQuestion.question.uid,
+                                            selected = selected,
+                                            onSelect = viewModel::selectAnswer,
+                                            onChange = { newText ->
+                                                optionTexts = optionTexts.toMutableMap().apply {
+                                                    put(option.uid, newText)
+                                                }
+                                                viewModel.updateAnswerOption(option.uid, newText)
+                                            },
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -169,14 +174,14 @@ fun EditQuestionScreen(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.Bottom
                         ) {
-                            TextButton(
+                            Button(
                                 onClick = {
                                     viewModel.saveAndGoBack(question, context)
                                 },
                             ) {
                                 Text("Save")
                             }
-                            TextButton(
+                            Button(
                                 onClick = {
                                     viewModel.deleteQuestion(questionId, context)
                                 },
@@ -187,13 +192,14 @@ fun EditQuestionScreen(
                     }
 
                 }
-                Row(
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                }
+//                Row(
+//                    modifier = Modifier
+//                        .padding(bottom = 16.dp)
+//                        .fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.SpaceBetween,
+//                ) {
+//                    Text("HOOOOY")
+//                }
 
             }
 

@@ -111,7 +111,7 @@ fun EditQuizScreen(
             ), scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         )
     }) { innerPadding ->
-
+        val a = innerPadding
         Box(
             modifier = Modifier
                 .padding(innerPadding)
@@ -136,6 +136,7 @@ fun EditQuizScreen(
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
             ) {
                 Button(
                     modifier = Modifier,
@@ -146,7 +147,7 @@ fun EditQuizScreen(
                         contentDescription = "add",
                         modifier = Modifier
                     )
-                    Text("Add Question")
+                    Text("Add")
                 }
                 Button(
                     modifier = Modifier,
@@ -173,7 +174,7 @@ fun EditQuizScreen(
                         contentDescription = "delete",
                         modifier = Modifier
                     )
-                    Text("Delete Quiz")
+                    Text("Delete")
                 }
             }
         }

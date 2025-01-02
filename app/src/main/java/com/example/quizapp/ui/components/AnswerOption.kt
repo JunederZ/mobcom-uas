@@ -21,6 +21,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.quizapp.ui.theme.ExtendedColorScheme
+import com.example.quizapp.ui.theme.extendedDark
+import com.example.quizapp.ui.theme.onContainerSuccess
+import com.example.quizapp.ui.theme.success
+import com.example.quizapp.ui.theme.successContainer
 import com.example.quizapp.ui.viewmodels.QuizViewModel
 
 
@@ -38,23 +43,25 @@ fun AnswerOption (
 
     val isQuizComplete by viewModel.isQuizComplete.collectAsState()
 
+
+
     val backgroundColor = when {
-        isCorrect == true -> MaterialTheme.colorScheme.primaryContainer
+        isCorrect == true -> MaterialTheme.colorScheme.successContainer
         isCorrect == false && selected -> MaterialTheme.colorScheme.errorContainer
         selected -> MaterialTheme.colorScheme.primary.copy(0.3f)
         else -> MaterialTheme.colorScheme.surface
     }
 
     val border = when {
+        isCorrect == true -> MaterialTheme.colorScheme.success
         isCorrect == false && selected -> MaterialTheme.colorScheme.error
         selected -> MaterialTheme.colorScheme.inversePrimary
-        isCorrect == true -> MaterialTheme.colorScheme.primary
         else -> MaterialTheme.colorScheme.onSurface
     }
 
     val textColor = when {
-        isCorrect == true -> MaterialTheme.colorScheme.onPrimaryContainer
-        isCorrect == false -> MaterialTheme.colorScheme.onErrorContainer
+        isCorrect == true -> MaterialTheme.colorScheme.onContainerSuccess
+        isCorrect == false && selected -> MaterialTheme.colorScheme.onErrorContainer
         selected -> MaterialTheme.colorScheme.primary
         else -> MaterialTheme.colorScheme.onSurface
     }

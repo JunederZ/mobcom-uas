@@ -20,6 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.quizapp.ui.theme.onContainerSuccess
+import com.example.quizapp.ui.theme.success
+import com.example.quizapp.ui.theme.successContainer
 import com.example.quizapp.ui.viewmodels.QuizViewModel
 
 
@@ -98,7 +101,7 @@ private fun NumberCard(
 ) {
 
     val borderColor = when  {
-        isCorrect==true -> MaterialTheme.colorScheme.primaryContainer
+        isCorrect==true -> MaterialTheme.colorScheme.success
         isSelected  -> MaterialTheme.colorScheme.primaryContainer
         isCorrect==false -> MaterialTheme.colorScheme.errorContainer
         isCorrect==null -> MaterialTheme.colorScheme.surfaceContainer
@@ -107,12 +110,21 @@ private fun NumberCard(
     }
 
     val backgroundColor = when  {
-        isCorrect== true  -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+        isCorrect== true  -> MaterialTheme.colorScheme.successContainer.copy(alpha = 0.3f)
         isSelected  -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
         isCorrect==false -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
         isCorrect==null  -> MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f)
         !isSelected -> MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f)
         else -> MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f)
+    }
+
+    val textColor = when {
+        isCorrect==true -> MaterialTheme.colorScheme.onContainerSuccess
+        isSelected  -> MaterialTheme.colorScheme.onPrimaryContainer
+        isCorrect==false -> MaterialTheme.colorScheme.onError
+        isCorrect==null -> MaterialTheme.colorScheme.onSurface
+        !isSelected -> MaterialTheme.colorScheme.onSurface
+        else -> MaterialTheme.colorScheme.onSurface
     }
 
     Card(
@@ -134,6 +146,7 @@ private fun NumberCard(
                 Text(
                     text = number.toString(),
                     style = MaterialTheme.typography.titleLarge,
+                    color = textColor
                 )
 
             }
