@@ -30,8 +30,9 @@ fun AnswerOption (
     answerId: Int,
     questionId: Int,
     selected: Boolean,
-    onSelect: (Int, Int) -> Unit,
+    onSelect: (Int, Int, Int) -> Unit,
     isCorrect: Boolean? = null,
+    index: Int,
     viewModel: QuizViewModel = hiltViewModel()
 ) {
 
@@ -45,7 +46,9 @@ fun AnswerOption (
     }
 
     val border = when {
+        isCorrect == false && selected -> MaterialTheme.colorScheme.error
         selected -> MaterialTheme.colorScheme.inversePrimary
+        isCorrect == true -> MaterialTheme.colorScheme.primary
         else -> MaterialTheme.colorScheme.onSurface
     }
 
@@ -66,7 +69,7 @@ fun AnswerOption (
             .background(backgroundColor)
             .fillMaxWidth()
             .clickable {
-                if (!isQuizComplete) onSelect(questionId, answerId)
+                if (!isQuizComplete) onSelect(index, questionId, answerId)
             }
             .padding(24.dp),
         contentAlignment = Alignment.Center

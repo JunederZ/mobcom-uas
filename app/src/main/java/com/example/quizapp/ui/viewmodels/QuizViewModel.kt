@@ -17,16 +17,16 @@ import javax.inject.Inject
 class QuizViewModel @Inject constructor(
     private val quizRepository: QuizRepository,
     savedStateHandle: SavedStateHandle,
-): ViewModel() {
+) : ViewModel() {
 
     private var _navigateFromQuiz = MutableStateFlow("")
-    var navigateFromQuiz : StateFlow<String> = _navigateFromQuiz.asStateFlow()
+    var navigateFromQuiz: StateFlow<String> = _navigateFromQuiz.asStateFlow()
 
     private var _navigateFromResult = MutableStateFlow("")
-    var navigateFromResult : StateFlow<String> = _navigateFromResult.asStateFlow()
+    var navigateFromResult: StateFlow<String> = _navigateFromResult.asStateFlow()
 
     private var _navigateFromMenu = MutableStateFlow(false)
-    var navigateFromMenu : StateFlow<Boolean> = _navigateFromMenu.asStateFlow()
+    var navigateFromMenu: StateFlow<Boolean> = _navigateFromMenu.asStateFlow()
 
     val quizId: Int = savedStateHandle["quizId"]!!
 
@@ -54,6 +54,9 @@ class QuizViewModel @Inject constructor(
     private val _correctList = MutableStateFlow<List<Boolean?>>(listOf())
     val correctList: StateFlow<List<Boolean?>> = _correctList
 
+    private val _selectedList = MutableStateFlow<List<Boolean?>>(listOf())
+    val selectedList: StateFlow<List<Boolean?>> = _selectedList
+
     private val _selectedAnswers = MutableStateFlow(mutableMapOf<Int, Int>())
     val selectedAnswers: StateFlow<Map<Int, Int>> = _selectedAnswers
 
@@ -64,12 +67,31 @@ class QuizViewModel @Inject constructor(
     val dialogVisibility: StateFlow<Boolean> = _dialogVisibility
 
 
-    fun selectAnswer(questionId: Int, answerOptionId: Int) {
+    fun selectAnswer(index: Int, questionId: Int, answerOptionId: Int) {
+        _selectedList.value = _selectedList.value.toMutableList().apply {
+            this[index] = true
+        }
         _selectedAnswers.value = _selectedAnswers.value.toMutableMap().apply {
             put(questionId, answerOptionId)
         }
         if (quiz.value.questions?.get(questionIndex.value)?.question?.uid == questionId) {
             _currentQuestionAnswer.value = answerOptionId
+        }
+    }
+
+    private var isNavigating = false
+
+    fun jumpToQuestion(index: Int) {
+        if (isNavigating) return
+        isNavigating = true
+        _navigateFromMenu.value = true
+        _navigateFromQuiz.value = ""
+
+        viewModelScope.launch {
+            _questionIndex.value = index
+            _progress.value = ((_questionIndex.value.toFloat() + 1) / _quiz.value.questions!!.size)
+            updateCurrentQuestionAnswer()
+            isNavigating = false  // Reset flag after updates
         }
     }
 
@@ -82,7 +104,6 @@ class QuizViewModel @Inject constructor(
     }
 
     fun finishModal() {
-//        if (!canFinishQuiz()) return
         _dialogVisibility.value = true
 
     }
@@ -93,6 +114,7 @@ class QuizViewModel @Inject constructor(
     }
 
     fun toReview() {
+        _selectedList.value = List(_quiz.value.questions!!.size) { false }
         _navigateFromQuiz.value = ""
         _navigateFromResult.value = "review"
     }
@@ -111,13 +133,6 @@ class QuizViewModel @Inject constructor(
         _navigateFromMenu.value = true
     }
 
-    fun jumpToQuestion(questionId: Int) {
-        _questionIndex.value = questionId
-        _progress.value = ((_questionIndex.value.toFloat() + 1) / _quiz.value.questions!!.size)
-        updateCurrentQuestionAnswer()
-        backFromMenu()
-    }
-
     fun finishQuiz() {
 
         viewModelScope.launch {
@@ -126,16 +141,13 @@ class QuizViewModel @Inject constructor(
                 val selectedAnswerId = _selectedAnswers.value[wholeQuestion.question.uid]
                 val correctAnswer = wholeQuestion.answerOptions.find { it.correct }
 
-                if (selectedAnswerId != null) {
-                    if (selectedAnswerId == correctAnswer!!.uid) {
-                        correctAnswers++
-                        _correctList.value += true
-                    } else {
-                        _correctList.value += false
-                    }
+                if (selectedAnswerId != null && selectedAnswerId == correctAnswer!!.uid) {
+                    correctAnswers++
+                    _correctList.value += true
+
 
                 } else {
-                    _correctList.value += null
+                    _correctList.value += false
                 }
             }
 
@@ -155,6 +167,7 @@ class QuizViewModel @Inject constructor(
         viewModelScope.launch {
             _quiz.value = quizRepository.getWholeQuiz(quizId)
             _progress.value = ((_questionIndex.value.toFloat() + 1) / _quiz.value.questions!!.size)
+            _selectedList.value = List(_quiz.value.questions!!.size) { false }
             updateCurrentQuestionAnswer()
         }
     }
@@ -180,7 +193,6 @@ class QuizViewModel @Inject constructor(
         val currentQuestionId = _quiz.value.questions?.get(_questionIndex.value)?.question?.uid
         _currentQuestionAnswer.value = currentQuestionId?.let { _selectedAnswers.value[it] }
     }
-
 
 
 //    private suspend fun populateDatabase() {

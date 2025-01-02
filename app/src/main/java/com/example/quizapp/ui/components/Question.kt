@@ -24,14 +24,12 @@ import com.example.quizapp.ui.viewmodels.QuizViewModel
 fun Question(
     viewModel: QuizViewModel = hiltViewModel()
 ) {
-    val index by viewModel.questionIndex.collectAsState()
     val progress by viewModel.progress.collectAsState()
     val quiz by viewModel.quiz.collectAsState()
     val title = quiz.quiz!!.title
+    val index by viewModel.questionIndex.collectAsState()
 
     val length = quiz.questions!!.size
-    val question = quiz.questions!![index].question.title
-    val selectedAnswers by viewModel.selectedAnswers.collectAsState()
     val isQuizComplete by viewModel.isQuizComplete.collectAsState()
     val currentAnswer by viewModel.currentQuestionAnswer.collectAsState()
 
@@ -84,7 +82,8 @@ fun Question(
                             questionId = wholeQuestion.question.uid,
                             selected = selected,
                             onSelect = viewModel::selectAnswer,
-                            isCorrect = isCorrect
+                            isCorrect = isCorrect,
+                            index = index,
                         )
                     }
                 }

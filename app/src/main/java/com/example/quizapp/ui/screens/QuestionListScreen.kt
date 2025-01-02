@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -34,14 +35,16 @@ fun QuestionListScreen(
     val title = quiz.quiz!!.title
     val isQuizComplete by viewModel.isQuizComplete.collectAsState()
     val correctList by viewModel.correctList.collectAsState()
+    val selectedList by viewModel.selectedList.collectAsState()
 
 
     val navigateFromMenu by viewModel.navigateFromMenu.collectAsState()
 
-    LaunchedEffect(navigateFromMenu) {
+    DisposableEffect(navigateFromMenu) {
         if (navigateFromMenu) {
             navController.navigateUp()
         }
+        onDispose { }
     }
 
     Scaffold(
@@ -62,7 +65,7 @@ fun QuestionListScreen(
                 .fillMaxSize()
         ) {
             LazyVerticalGrid(
-                columns = GridCells.Fixed(5),
+                columns = GridCells.Fixed(4),
                 contentPadding = PaddingValues(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -71,8 +74,10 @@ fun QuestionListScreen(
                     val isCorrect: Boolean? =
                         if (!isQuizComplete) null
                         else correctList[number]
+                    val isSelected: Boolean = selectedList[number]!!
 
                     NumberCard(
+                        isSelected = isSelected,
                         isCorrect = isCorrect,
                         number = number + 1,
                         onClick = { viewModel.jumpToQuestion(number) }
@@ -86,21 +91,37 @@ fun QuestionListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NumberCard(
+    isSelected: Boolean,
     isCorrect: Boolean?,
     number: Int,
     onClick: (Int) -> Unit
 ) {
 
-    val backgroundColor = when (isCorrect) {
-        true -> MaterialTheme.colorScheme.primaryContainer
-        false -> MaterialTheme.colorScheme.errorContainer
-        null -> MaterialTheme.colorScheme.errorContainer
+    val borderColor = when  {
+        isCorrect==true -> MaterialTheme.colorScheme.primaryContainer
+        isSelected  -> MaterialTheme.colorScheme.primaryContainer
+        isCorrect==false -> MaterialTheme.colorScheme.errorContainer
+        isCorrect==null -> MaterialTheme.colorScheme.surfaceContainer
+        !isSelected -> MaterialTheme.colorScheme.surfaceContainer
+        else -> MaterialTheme.colorScheme.surfaceContainer
+    }
+
+    val backgroundColor = when  {
+        isCorrect== true  -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+        isSelected  -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+        isCorrect==false -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+        isCorrect==null  -> MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f)
+        !isSelected -> MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f)
+        else -> MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f)
     }
 
     Card(
+        colors = CardDefaults.cardColors(
+            containerColor = backgroundColor
+        ),
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
-            .border(2.dp, backgroundColor, shape = MaterialTheme.shapes.medium)
+            .border(2.dp, borderColor, shape = MaterialTheme.shapes.medium)
             .aspectRatio(1f)
             .clickable { onClick(number) }
     ) {
