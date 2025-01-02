@@ -6,10 +6,16 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -62,24 +68,35 @@ fun EditAnswerOption (
             )
             .background(backgroundColor)
             .fillMaxWidth()
+//            .padding(start = 24.dp, top = 16.dp, bottom = 16.dp, end = 64.dp)
             .clickable { onSelect(questionId, answerId) }
-            .padding(horizontal = 24.dp, vertical = 16.dp),
+            .padding(horizontal = 32.dp, vertical = 16.dp),
         contentAlignment = Alignment.Center
     ) {
-        TextField(
-            value = optionText,
-            onValueChange = onChange,
-            textStyle = TextStyle(color = textColor),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent,
-//                focusedIndicatorColor = Color.Transparent,
-//                unfocusedIndicatorColor = Color.Transparent
-            ),
-            placeholder = { Text("Enter option") }
-        )
+        Row {
+            TextField(
+                value = optionText,
+                onValueChange = onChange,
+                textStyle = TextStyle(color = textColor),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    errorContainerColor = Color.Transparent,
+                ),
+                placeholder = { Text("Enter option") },
+                modifier = Modifier
+                    .heightIn(min = 0.dp)
+                    .height(48.dp)
+
+
+            )
+            Spacer(modifier = Modifier.width(64.dp))
+            RadioButton(
+                selected,
+                onClick = { onSelect(questionId, answerId)  },
+            )
+        }
     }
 
 }
