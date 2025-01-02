@@ -102,8 +102,8 @@ private fun NumberCard(
 
     val borderColor = when  {
         isCorrect==true -> MaterialTheme.colorScheme.success
-        isSelected  -> MaterialTheme.colorScheme.primaryContainer
-        isCorrect==false -> MaterialTheme.colorScheme.errorContainer
+        isSelected  -> MaterialTheme.colorScheme.primary
+        isCorrect==false -> MaterialTheme.colorScheme.error
         isCorrect==null -> MaterialTheme.colorScheme.surfaceContainer
         !isSelected -> MaterialTheme.colorScheme.surfaceContainer
         else -> MaterialTheme.colorScheme.surfaceContainer
@@ -120,8 +120,8 @@ private fun NumberCard(
 
     val textColor = when {
         isCorrect==true -> MaterialTheme.colorScheme.onContainerSuccess
-        isSelected  -> MaterialTheme.colorScheme.onPrimaryContainer
-        isCorrect==false -> MaterialTheme.colorScheme.onError
+        isCorrect==false -> MaterialTheme.colorScheme.onErrorContainer
+        isSelected -> MaterialTheme.colorScheme.onPrimaryContainer
         isCorrect==null -> MaterialTheme.colorScheme.onSurface
         !isSelected -> MaterialTheme.colorScheme.onSurface
         else -> MaterialTheme.colorScheme.onSurface
