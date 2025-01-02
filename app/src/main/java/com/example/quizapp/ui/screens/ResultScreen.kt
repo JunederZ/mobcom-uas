@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.quizapp.ui.theme.success
 import com.example.quizapp.ui.viewmodels.QuizViewModel
 
 @Composable
@@ -118,7 +119,7 @@ fun ResultScreen(
                         prefix = "✓",
                         value = correct.toString(),
                         label = "Correct",
-                        textColor = MaterialTheme.colorScheme.primary
+                        textColor = MaterialTheme.colorScheme.success
                     )
 
                     Divider(
