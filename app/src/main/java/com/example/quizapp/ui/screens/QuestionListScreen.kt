@@ -42,7 +42,7 @@ fun QuestionListScreen(
 
     DisposableEffect(navigateFromMenu) {
         if (navigateFromMenu) {
-            navController.navigateUp()
+            navController.popBackStack()
         }
         onDispose { }
     }
