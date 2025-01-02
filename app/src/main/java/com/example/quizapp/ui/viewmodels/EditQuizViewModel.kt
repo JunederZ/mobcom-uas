@@ -88,8 +88,7 @@ class EditQuizViewModel @Inject constructor(
 
     fun saveAndGoBack(questionText: String, context: Context) {
         viewModelScope.launch {
-            updateQuestionText(questionText)
-            saveQuestion()
+            saveQuestion(questionText)
             Toast.makeText(
                 context,
                 "Question Updated",
@@ -103,10 +102,6 @@ class EditQuizViewModel @Inject constructor(
         if (questionId == chosenQuestionId) {
             _currentQuestionAnswer.value = answerOptionId
         }
-    }
-
-    fun updateQuestionText(newText: String) {
-        _questionText.value = newText
     }
 
     fun updateAnswerOption(answerOptionId: Int, newText: String) {
@@ -130,7 +125,7 @@ class EditQuizViewModel @Inject constructor(
         }
     }
 
-    private fun saveQuestion() {
+    private fun saveQuestion(questionText: String) {
         viewModelScope.launch {
             val newQuiz = quiz.value
             if (newQuiz != null) {
@@ -138,7 +133,7 @@ class EditQuizViewModel @Inject constructor(
                 newQuiz.quiz?.let { quizRepository.updateQuiz(it) }
             }
 
-            _question.value?.question?.title = _questionText.value.toString()
+            _question.value?.question?.title = questionText
             _question.value?.question?.let { quizRepository.updateQuestion(it) }
             _question.value?.answerOptions?.forEach { answerOption ->
                 answerOption.correct = answerOption.uid == _currentQuestionAnswer.value

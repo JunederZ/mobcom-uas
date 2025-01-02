@@ -138,8 +138,6 @@ fun EditQuestionScreen(
                                 placeholder = { Text("Enter question body") }
                             )
 
-                            viewModel.updateQuestionText(wholeQuestion?.question?.title ?: "")
-
                             Spacer(modifier = Modifier.height(32.dp))
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(24.dp)
