@@ -48,7 +48,7 @@ fun AppNavHost(navController: NavHostController) {
             val quizId = navBackStackEntry.arguments?.getString("quizId")
             quizId?.let {
                 quizId.toIntOrNull()?.let { it1 ->
-                    EditQuizScreen(it1, navController)
+                    EditQuizScreen(navController)
                 }
             }
         }

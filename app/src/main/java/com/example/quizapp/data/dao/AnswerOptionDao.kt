@@ -10,6 +10,9 @@ import com.example.quizapp.data.models.AnswerOptionEntity
 @Dao
 interface AnswerOptionDao {
 
+    @Query("DELETE FROM answeroptionentity WHERE uid = :answerOptionId")
+    suspend fun deleteAnswerOptionById(answerOptionId: Int)
+
     @Update
     suspend fun updateAnswerOption(answerOptionEntity: AnswerOptionEntity)
 

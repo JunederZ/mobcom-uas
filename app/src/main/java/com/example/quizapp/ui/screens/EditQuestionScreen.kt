@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,14 +30,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.quizapp.data.models.WholeQuestion
 import com.example.quizapp.ui.components.EditAnswerOption
-import com.example.quizapp.ui.viewmodels.EditQuestionViewModel
+import com.example.quizapp.ui.viewmodels.EditQuizViewModel
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun EditQuestionScreen(
     questionId: Int,
     navHostController: NavHostController,
-    viewModel: EditQuestionViewModel = hiltViewModel(),
+    viewModel: EditQuizViewModel = hiltViewModel(),
 ) {
 
     val quiz by viewModel.quiz.collectAsState(initial = null)
@@ -46,7 +45,7 @@ fun EditQuestionScreen(
     val currentAnswer by viewModel.currentQuestionAnswer.collectAsState()
     var question by remember { mutableStateOf("") }
     var optionTexts by remember { mutableStateOf(mutableMapOf<Int, String>()) }
-    val navEvent by viewModel.navigationEvents.observeAsState()
+    val navEvent by viewModel.navigationEvents.collectAsState(null)
 
     LaunchedEffect(navEvent) {
         navEvent?.let {
@@ -147,13 +146,25 @@ fun EditQuestionScreen(
                             }
                         }
                     }
-                    TextButton(
-                        onClick = {
-                            viewModel.saveAndGoBack(question)
-                        },
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom
                     ) {
-                        Text("Save")
+                        TextButton(
+                            onClick = {
+                                viewModel.saveAndGoBack(question)
+                            },
+                        ) {
+                            Text("Save")
+                        }
+                        TextButton(
+                            onClick = {
+                                viewModel.deleteQuestion(questionId)
+                            },
+                        ) {
+                            Text("Delete")
+                        }
                     }
                 }
 
