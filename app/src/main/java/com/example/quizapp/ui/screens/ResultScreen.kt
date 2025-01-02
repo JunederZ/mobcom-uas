@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -46,13 +47,14 @@ fun ResultScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE3F2FD)),
+            .background(MaterialTheme.colorScheme.primaryContainer),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "Result Of Your Quiz",
             fontSize = 24.sp,
-            modifier = Modifier.padding(top = 200.dp)
+            modifier = Modifier.padding(top = 200.dp),
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
         Card(
@@ -60,7 +62,7 @@ fun ResultScreen(
                 .padding(16.dp)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -74,20 +76,20 @@ fun ResultScreen(
                         text = "You Have Scored",
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Text(
                         text = "$score%",
                         fontSize = 48.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
                 Divider(
                     modifier = Modifier.fillMaxWidth(),
-                    color = Color.LightGray,
+                    color = MaterialTheme.colorScheme.outlineVariant,
                     thickness = 1.dp
                 )
 
@@ -101,14 +103,14 @@ fun ResultScreen(
                         prefix = "Q",
                         value = total.toString(),
                         label = "Questions",
-                        textColor = Color(0xFF2196F3)
+                        textColor = MaterialTheme.colorScheme.primary
                     )
 
                     Divider(
                         modifier = Modifier
                             .height(100.dp)
                             .width(1.dp),
-                        color = Color.LightGray
+                        color = MaterialTheme.colorScheme.outlineVariant
                     )
 
                     QuizStat(
@@ -116,14 +118,14 @@ fun ResultScreen(
                         prefix = "✓",
                         value = correct.toString(),
                         label = "Correct",
-                        textColor = Color(0xFF4CAF50)
+                        textColor = MaterialTheme.colorScheme.primary
                     )
 
                     Divider(
                         modifier = Modifier
                             .height(100.dp)
                             .width(1.dp),
-                        color = Color.LightGray
+                        color = MaterialTheme.colorScheme.outlineVariant
                     )
 
                     QuizStat(
@@ -131,7 +133,7 @@ fun ResultScreen(
                         prefix = "✕",
                         value = (total - correct!!).toString(),
                         label = "Wrong",
-                        textColor = Color(0xFFF44336)
+                        textColor = MaterialTheme.colorScheme.error
                     )
                 }
             }
@@ -145,12 +147,12 @@ fun ResultScreen(
                 .padding(16.dp)
                 .fillMaxWidth()
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surface),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
                 text = "Back To Home",
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -162,12 +164,12 @@ fun ResultScreen(
                 .padding(16.dp)
                 .fillMaxWidth()
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surface),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
                 text = "Review",
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )

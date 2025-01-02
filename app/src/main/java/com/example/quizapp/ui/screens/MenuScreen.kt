@@ -79,13 +79,13 @@ fun MainPage(
                     )
                 },
                 modifier = Modifier,
-                colors = TopAppBarColors(
-                    MaterialTheme.colorScheme.primaryContainer,
-                    scrolledContainerColor = Color.Black,
-                    navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = Color.Black,
-                    actionIconContentColor = Color.Black
-                ),
+//                colors = TopAppBarColors(
+//                    MaterialTheme.colorScheme.primaryContainer,
+//                    scrolledContainerColor = Color.Black,
+//                    navigationIconContentColor = MaterialTheme.colorScheme.primary,
+//                    titleContentColor = Color.Black,
+//                    actionIconContentColor = Color.Black
+//                ),
                 scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
             )
         },
@@ -106,25 +106,25 @@ fun MainPage(
                     ) {
                     TextButton(
                         onClick = { viewModel.addNewQuiz() },
-                        modifier = Modifier.background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(100.dp))
+                        modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(100.dp))
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onTertiary
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
-                        Text("Add New Quiz", color = MaterialTheme.colorScheme.onTertiary)
+                        Text("Add New Quiz", color = MaterialTheme.colorScheme.onPrimaryContainer)
                     }
                     TextButton(
                         onClick = { showEdit = !showEdit },
-                        modifier = Modifier.background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(100.dp))
+                        modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(100.dp))
                     ) {
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onTertiary
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
-                        Text("Edit Quiz", color = MaterialTheme.colorScheme.onTertiary)
+                        Text("Edit Quiz", color = MaterialTheme.colorScheme.onPrimaryContainer)
                     }
                 }
             }
