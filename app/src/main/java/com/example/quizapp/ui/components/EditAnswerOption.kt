@@ -71,12 +71,12 @@ fun EditAnswerOption (
             onValueChange = onChange,
             textStyle = TextStyle(color = textColor),
             colors = TextFieldDefaults.colors(
-//                focusedContainerColor = Color.Transparent,
-//                unfocusedContainerColor = Color.Transparent,
-//                disabledContainerColor = Color.Transparent,
-//                errorContainerColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+//                focusedIndicatorColor = Color.Transparent,
+//                unfocusedIndicatorColor = Color.Transparent
             ),
             placeholder = { Text("Enter option") }
         )

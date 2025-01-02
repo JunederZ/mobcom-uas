@@ -110,7 +110,7 @@ fun EditQuestionScreen(
                             verticalAlignment = Alignment.Bottom
 
                         ) {
-                            Text(question)
+                            Text(quiz!!.quiz!!.title)
                         }
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -121,6 +121,7 @@ fun EditQuestionScreen(
                         questionAnswers.let { wholeQuestion ->
                             TextField(
                                 question,
+                                label = {Text("Question")},
                                 onValueChange = { newText ->
                                     question = newText
                                 },
@@ -130,8 +131,6 @@ fun EditQuestionScreen(
                                     unfocusedContainerColor = Color.Transparent,
                                     disabledContainerColor = Color.Transparent,
                                     errorContainerColor = Color.Transparent,
-                                    //                                focusedIndicatorColor = Color.Transparent,
-                                    //                                unfocusedIndicatorColor = Color.Transparent
                                 ),
                                 placeholder = { Text("Enter question body") }
                             )

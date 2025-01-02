@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -83,12 +84,21 @@ fun EditQuizScreen(
         CenterAlignedTopAppBar(
             title = {
                 TextField(
+                    label = { Text("Quiz Name")},
                     value = quizTitle,
                     onValueChange = { quizTitle = it },
                     textStyle = TextStyle.Default.copy(
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
-                    )
+                    ),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        errorContainerColor = Color.Transparent,
+                        //                                focusedIndicatorColor = Color.Transparent,
+                        //                                unfocusedIndicatorColor = Color.Transparent
+                    ),
                 )
             },
             modifier = Modifier, colors = TopAppBarColors(
