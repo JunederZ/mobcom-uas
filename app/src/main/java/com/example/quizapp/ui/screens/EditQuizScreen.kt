@@ -12,7 +12,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -81,7 +84,7 @@ fun EditQuizScreen(
 
 
     Scaffold(topBar = {
-        CenterAlignedTopAppBar(
+        TopAppBar(
             title = {
                 TextField(
                     label = { Text("Quiz Name")},
@@ -96,13 +99,11 @@ fun EditQuizScreen(
                         unfocusedContainerColor = Color.Transparent,
                         disabledContainerColor = Color.Transparent,
                         errorContainerColor = Color.Transparent,
-                        //                                focusedIndicatorColor = Color.Transparent,
-                        //                                unfocusedIndicatorColor = Color.Transparent
                     ),
                 )
             },
             modifier = Modifier, colors = TopAppBarColors(
-                MaterialTheme.colorScheme.primaryContainer,
+                Color.Transparent,
                 scrolledContainerColor = Color.Black,
                 navigationIconContentColor = MaterialTheme.colorScheme.primary,
                 titleContentColor = Color.Black,
@@ -136,7 +137,7 @@ fun EditQuizScreen(
                     .fillMaxHeight()
                     .fillMaxWidth()
             ) {
-                TextButton(
+                Button(
                     modifier = Modifier,
                     onClick = { viewModel.addNewQuestion("New Question") }
                 ) {
@@ -147,7 +148,7 @@ fun EditQuizScreen(
                     )
                     Text("Add Question")
                 }
-                TextButton(
+                Button(
                     modifier = Modifier,
                     onClick = { viewModel.saveQuiz(quizTitle, context) }
                 ) {
@@ -158,7 +159,7 @@ fun EditQuizScreen(
                     )
                     Text("Save")
                 }
-                TextButton(
+                Button(
                     modifier = Modifier,
                     onClick = {
                         viewModel.deleteQuiz(
@@ -168,7 +169,7 @@ fun EditQuizScreen(
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Warning,
+                        imageVector = Icons.Default.Delete,
                         contentDescription = "delete",
                         modifier = Modifier
                     )
