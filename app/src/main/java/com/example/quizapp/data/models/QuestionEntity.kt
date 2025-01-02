@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey
         onDelete = ForeignKey.CASCADE
     )]
 )
-data class QuestionEntity (
+data class QuestionEntity(
     @PrimaryKey(autoGenerate = true)
     var uid: Int = 0,
     var title: String,

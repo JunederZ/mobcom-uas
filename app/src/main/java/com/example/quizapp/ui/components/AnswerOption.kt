@@ -4,25 +4,19 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.quizapp.ui.theme.ExtendedColorScheme
-import com.example.quizapp.ui.theme.extendedDark
 import com.example.quizapp.ui.theme.onContainerSuccess
 import com.example.quizapp.ui.theme.success
 import com.example.quizapp.ui.theme.successContainer
@@ -30,7 +24,7 @@ import com.example.quizapp.ui.viewmodels.QuizViewModel
 
 
 @Composable
-fun AnswerOption (
+fun AnswerOption(
     optionText: String = "",
     answerId: Int,
     questionId: Int,
@@ -42,8 +36,6 @@ fun AnswerOption (
 ) {
 
     val isQuizComplete by viewModel.isQuizComplete.collectAsState()
-
-
 
     val backgroundColor = when {
         isCorrect == true -> MaterialTheme.colorScheme.successContainer
@@ -81,7 +73,7 @@ fun AnswerOption (
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(optionText, color = textColor )
+        Text(optionText, color = textColor)
     }
 
 }

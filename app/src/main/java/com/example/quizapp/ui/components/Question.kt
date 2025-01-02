@@ -1,6 +1,5 @@
 package com.example.quizapp.ui.components
 
-import android.health.connect.datatypes.units.Length
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,14 +34,13 @@ fun Question(
 
     val currentQuestion = quiz.questions?.get(index)
 
-    Box (
+    Box(
         modifier = Modifier
             .fillMaxWidth(),
         contentAlignment = Alignment.TopCenter
     ) {
-        Column (
-        )  {
-            Row (
+        Column {
+            Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Bottom
@@ -51,14 +49,14 @@ fun Question(
                 Text(title)
                 Text("Question ${index + 1} of $length")
             }
-            Spacer(modifier= Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
 
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth(),
-                progress = {progress}
+                progress = { progress }
             )
-            Spacer(modifier= Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
 
             currentQuestion?.let { wholeQuestion ->

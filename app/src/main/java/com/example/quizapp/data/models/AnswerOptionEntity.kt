@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey
         onDelete = ForeignKey.CASCADE
     )]
 )
-data class AnswerOptionEntity (
+data class AnswerOptionEntity(
     @PrimaryKey(autoGenerate = true)
     var uid: Int = 0,
     var correct: Boolean = false,

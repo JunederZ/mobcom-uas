@@ -2,13 +2,10 @@ package com.example.quizapp.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 import com.example.quizapp.data.models.AnswerOptionEntity
 import com.example.quizapp.data.models.QuestionEntity
-import com.example.quizapp.data.models.QuizEntity
 import com.example.quizapp.data.models.WholeQuiz
 
 @Dao

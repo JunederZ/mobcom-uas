@@ -10,14 +10,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -29,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -91,107 +88,108 @@ fun EditQuestionScreen(
     } else {
 
 
-            Column(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                contentAlignment = Alignment.BottomCenter
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                    contentAlignment = Alignment.BottomCenter
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceBetween
+
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxHeight(),
-                        verticalArrangement = Arrangement.SpaceBetween
-
-                    ) {
-                        Column {
-                            Row(
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.Bottom
-
-                            ) {
-                                Text(quiz!!.quiz!!.title, style=MaterialTheme.typography.headlineLarge,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(8.dp))
-
-
-                            Spacer(modifier = Modifier.height(24.dp))
-
-
-                            questionAnswers.let { wholeQuestion ->
-                                TextField(
-                                    question,
-                                    label = {Text("Question")},
-                                    onValueChange = { newText ->
-                                        question = newText
-                                    },
-                                    textStyle = MaterialTheme.typography.titleLarge,
-                                    colors = TextFieldDefaults.colors(
-//                                    focusedContainerColor = Color.Transparent,
-//                                    unfocusedContainerColor = Color.Transparent,
-//                                    disabledContainerColor = Color.Transparent,
-//                                    errorContainerColor = Color.Transparent,
-                                    ),
-                                    placeholder = { Text("Enter question body") },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-
-                                Spacer(modifier = Modifier.height(32.dp))
-                                Column(
-                                    verticalArrangement = Arrangement.spacedBy(24.dp)
-                                ) {
-                                    wholeQuestion?.answerOptions?.forEach { option ->
-                                        val selected = option.uid == currentAnswer
-                                        val thisOptionText = optionTexts[option.uid] ?: ""
-
-                                        EditAnswerOption(
-                                            optionText = thisOptionText,
-                                            answerId = option.uid,
-                                            questionId = wholeQuestion.question.uid,
-                                            selected = selected,
-                                            onSelect = viewModel::selectAnswer,
-                                            onChange = { newText ->
-                                                optionTexts = optionTexts.toMutableMap().apply {
-                                                    put(option.uid, newText)
-                                                }
-                                                viewModel.updateAnswerOption(option.uid, newText)
-                                            },
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                    Column {
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.Bottom
+
                         ) {
-                            Button(
-                                onClick = {
-                                    viewModel.saveAndGoBack(question, context)
+                            Text(
+                                quiz!!.quiz!!.title, style = MaterialTheme.typography.headlineLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+
+                        questionAnswers.let { wholeQuestion ->
+                            TextField(
+                                question,
+                                label = { Text("Question") },
+                                onValueChange = { newText ->
+                                    question = newText
                                 },
+                                textStyle = MaterialTheme.typography.titleLarge,
+                                colors = TextFieldDefaults.colors(
+//                                    focusedContainerColor = Color.Transparent,
+//                                    unfocusedContainerColor = Color.Transparent,
+//                                    disabledContainerColor = Color.Transparent,
+//                                    errorContainerColor = Color.Transparent,
+                                ),
+                                placeholder = { Text("Enter question body") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            Spacer(modifier = Modifier.height(32.dp))
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(24.dp)
                             ) {
-                                Text("Save")
-                            }
-                            Button(
-                                onClick = {
-                                    viewModel.deleteQuestion(questionId, context)
-                                },
-                            ) {
-                                Text("Delete")
+                                wholeQuestion?.answerOptions?.forEach { option ->
+                                    val selected = option.uid == currentAnswer
+                                    val thisOptionText = optionTexts[option.uid] ?: ""
+
+                                    EditAnswerOption(
+                                        optionText = thisOptionText,
+                                        answerId = option.uid,
+                                        questionId = wholeQuestion.question.uid,
+                                        selected = selected,
+                                        onSelect = viewModel::selectAnswer,
+                                        onChange = { newText ->
+                                            optionTexts = optionTexts.toMutableMap().apply {
+                                                put(option.uid, newText)
+                                            }
+                                            viewModel.updateAnswerOption(option.uid, newText)
+                                        },
+                                    )
+                                }
                             }
                         }
                     }
-
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom
+                    ) {
+                        Button(
+                            onClick = {
+                                viewModel.saveAndGoBack(question, context)
+                            },
+                        ) {
+                            Text("Save")
+                        }
+                        Button(
+                            onClick = {
+                                viewModel.deleteQuestion(questionId, context)
+                            },
+                        ) {
+                            Text("Delete")
+                        }
+                    }
                 }
+
+            }
 //                Row(
 //                    modifier = Modifier
 //                        .padding(bottom = 16.dp)
@@ -201,7 +199,7 @@ fun EditQuestionScreen(
 //                    Text("HOOOOY")
 //                }
 
-            }
+        }
 
     }
 

@@ -11,8 +11,8 @@ import androidx.navigation.navArgument
 import com.example.quizapp.ui.screens.EditQuestionScreen
 import com.example.quizapp.ui.screens.EditQuizScreen
 import com.example.quizapp.ui.screens.MainPage
-import com.example.quizapp.ui.screens.QuizScreen
 import com.example.quizapp.ui.screens.QuestionListScreen
+import com.example.quizapp.ui.screens.QuizScreen
 import com.example.quizapp.ui.screens.ResultScreen
 import com.example.quizapp.ui.viewmodels.QuizViewModel
 
@@ -35,16 +35,16 @@ fun AppNavHost(navController: NavHostController) {
             }
             val viewModel: QuizViewModel = hiltViewModel(parentEntry)
             val quizId = backStackEntry.arguments!!.getInt("quizId")
-            QuizScreen(quizId, navController, viewModel=viewModel)
+            QuizScreen(quizId, navController, viewModel = viewModel)
         }
         composable(Routes.Result.route) { backStackEntry ->
             val parentEntry = remember(backStackEntry) {
                 navController.getBackStackEntry(Routes.Quiz.route)
             }
             val viewModel: QuizViewModel = hiltViewModel(parentEntry)
-            ResultScreen(viewModel=viewModel, navController)
+            ResultScreen(viewModel = viewModel, navController)
         }
-        composable (Routes.EditQuiz.route) { navBackStackEntry ->
+        composable(Routes.EditQuiz.route) { navBackStackEntry ->
             val quizId = navBackStackEntry.arguments?.getString("quizId")
             quizId?.let {
                 quizId.toIntOrNull()?.let { it1 ->
@@ -53,7 +53,7 @@ fun AppNavHost(navController: NavHostController) {
             }
         }
 
-        composable (Routes.EditQuestion.route) { navBackStackEntry ->
+        composable(Routes.EditQuestion.route) { navBackStackEntry ->
             val quizId = navBackStackEntry.arguments?.getString("questionId")
             quizId?.let {
                 quizId.toIntOrNull()?.let { it1 ->
@@ -70,7 +70,7 @@ fun AppNavHost(navController: NavHostController) {
                 navController.getBackStackEntry(Routes.Quiz.route)
             }
             val viewModel: QuizViewModel = hiltViewModel(parentEntry)
-            QuestionListScreen(navController=navController, viewModel=viewModel)
+            QuestionListScreen(navController = navController, viewModel = viewModel)
         }
 
     }

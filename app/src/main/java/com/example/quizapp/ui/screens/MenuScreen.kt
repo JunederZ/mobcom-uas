@@ -58,16 +58,12 @@ fun MainPage(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-//    viewModel.populateDatabase
-
     LaunchedEffect(Unit) {
         viewModel.refresh()
     }
 
-
     var showEdit by remember { mutableStateOf(false) }
     val quizList by viewModel.quizList.collectAsState()
-
     val navEvent by viewModel.navigationEvents.collectAsState(initial = "")
 
     LaunchedEffect(navEvent) {
@@ -86,7 +82,6 @@ fun MainPage(
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .clip(MaterialTheme.shapes.extraLarge)
-
                             .width(52.dp)
                             .height(52.dp)
                             .background(Color.White)

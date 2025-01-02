@@ -1,10 +1,23 @@
 package com.example.quizapp.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -88,10 +101,10 @@ fun ResultScreen(
                     )
                 }
 
-                Divider(
+                HorizontalDivider(
                     modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.outlineVariant,
-                    thickness = 1.dp
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant
                 )
 
                 Row(
@@ -100,14 +113,16 @@ fun ResultScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     QuizStat(
-                        modifier = Modifier.weight(1f).padding(18.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(18.dp),
                         prefix = "Q",
                         value = total.toString(),
                         label = "Questions",
                         textColor = MaterialTheme.colorScheme.primary
                     )
 
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier
                             .height(100.dp)
                             .width(1.dp),
@@ -115,14 +130,16 @@ fun ResultScreen(
                     )
 
                     QuizStat(
-                        modifier = Modifier.weight(1f).padding(18.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(18.dp),
                         prefix = "✓",
                         value = correct.toString(),
                         label = "Correct",
                         textColor = MaterialTheme.colorScheme.success
                     )
 
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier
                             .height(100.dp)
                             .width(1.dp),
@@ -130,7 +147,9 @@ fun ResultScreen(
                     )
 
                     QuizStat(
-                        modifier = Modifier.weight(1f).padding(18.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(18.dp),
                         prefix = "✕",
                         value = (total - correct!!).toString(),
                         label = "Wrong",
