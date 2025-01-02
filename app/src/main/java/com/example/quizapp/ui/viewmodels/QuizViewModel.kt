@@ -51,6 +51,8 @@ class QuizViewModel @Inject constructor(
     private val _score = MutableStateFlow<Int?>(null)
     val score: StateFlow<Int?> = _score
 
+    private val _correctList = MutableStateFlow<List<Boolean?>>(listOf())
+    val correctList: StateFlow<List<Boolean?>> = _correctList
 
     private val _selectedAnswers = MutableStateFlow(mutableMapOf<Int, Int>())
     val selectedAnswers: StateFlow<Map<Int, Int>> = _selectedAnswers
@@ -124,9 +126,16 @@ class QuizViewModel @Inject constructor(
                 val selectedAnswerId = _selectedAnswers.value[wholeQuestion.question.uid]
                 val correctAnswer = wholeQuestion.answerOptions.find { it.correct }
 
-                if (selectedAnswerId != null && correctAnswer != null &&
-                    selectedAnswerId == correctAnswer.uid) {
-                    correctAnswers++
+                if (selectedAnswerId != null) {
+                    if (selectedAnswerId == correctAnswer!!.uid) {
+                        correctAnswers++
+                        _correctList.value += true
+                    } else {
+                        _correctList.value += false
+                    }
+
+                } else {
+                    _correctList.value += null
                 }
             }
 

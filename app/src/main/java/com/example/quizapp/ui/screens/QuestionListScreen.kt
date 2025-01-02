@@ -1,5 +1,7 @@
 package com.example.quizapp.ui.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -14,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.quizapp.ui.viewmodels.QuizViewModel
@@ -29,6 +32,9 @@ fun QuestionListScreen(
     val quiz by viewModel.quiz.collectAsState()
     val length = quiz.questions!!.size
     val title = quiz.quiz!!.title
+    val isQuizComplete by viewModel.isQuizComplete.collectAsState()
+    val correctList by viewModel.correctList.collectAsState()
+
 
     val navigateFromMenu by viewModel.navigateFromMenu.collectAsState()
 
@@ -62,7 +68,12 @@ fun QuestionListScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(length) { number ->
+                    val isCorrect: Boolean? =
+                        if (!isQuizComplete) null
+                        else correctList[number]
+
                     NumberCard(
+                        isCorrect = isCorrect,
                         number = number + 1,
                         onClick = { viewModel.jumpToQuestion(number) }
                     )
@@ -75,22 +86,35 @@ fun QuestionListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NumberCard(
+    isCorrect: Boolean?,
     number: Int,
     onClick: (Int) -> Unit
 ) {
+
+    val backgroundColor = when (isCorrect) {
+        true -> MaterialTheme.colorScheme.primaryContainer
+        false -> MaterialTheme.colorScheme.errorContainer
+        null -> MaterialTheme.colorScheme.errorContainer
+    }
+
     Card(
+        shape = MaterialTheme.shapes.medium,
         modifier = Modifier
+            .border(2.dp, backgroundColor, shape = MaterialTheme.shapes.medium)
             .aspectRatio(1f)
             .clickable { onClick(number) }
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = number.toString(),
-                style = MaterialTheme.typography.titleLarge
-            )
-        }
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+
+            ) {
+                Text(
+                    text = number.toString(),
+                    style = MaterialTheme.typography.titleLarge,
+                )
+
+            }
     }
 }

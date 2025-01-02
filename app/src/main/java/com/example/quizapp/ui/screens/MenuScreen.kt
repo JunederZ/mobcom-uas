@@ -68,82 +68,79 @@ fun MainPage(
         }
     }
 
-    QuizappTheme(
-        darkTheme = true,
-    ) {
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text(
-                            text = "Quzap",
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Quzap",
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                },
+                modifier = Modifier,
+                colors = TopAppBarColors(
+                    MaterialTheme.colorScheme.primaryContainer,
+                    scrolledContainerColor = Color.Black,
+                    navigationIconContentColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = Color.Black,
+                    actionIconContentColor = Color.Black
+                ),
+                scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+            )
+        },
+        bottomBar = {
+            BottomAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                containerColor = Color.Transparent,
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .align(Alignment.CenterVertically),
+
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically,
+
+                    ) {
+                    TextButton(
+                        onClick = { viewModel.addNewQuiz() },
+                        modifier = Modifier.background(Color.Black, RoundedCornerShape(100.dp))
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null,
+                            tint = Color.White
                         )
-                    },
-                    modifier = Modifier,
-                    colors = TopAppBarColors(
-                        MaterialTheme.colorScheme.primaryContainer,
-                        scrolledContainerColor = Color.Black,
-                        navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                        titleContentColor = Color.Black,
-                        actionIconContentColor = Color.Black
-                    ),
-                    scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-                )
-            },
-            bottomBar = {
-                BottomAppBar(
-                    modifier = Modifier.fillMaxWidth(),
-                    containerColor = Color.Transparent,
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .align(Alignment.CenterVertically),
-
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically,
-
-                        ) {
-                        TextButton(
-                            onClick = { viewModel.addNewQuiz() },
-                            modifier = Modifier.background(Color.Black, RoundedCornerShape(100.dp))
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                            Text("Add New Quiz", color = Color.White)
-                        }
-                        TextButton(
-                            onClick = { showEdit = !showEdit },
-                            modifier = Modifier.background(Color.Black, RoundedCornerShape(100.dp))
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                            Text("Edit Quiz", color = Color.White)
-                        }
+                        Text("Add New Quiz", color = Color.White)
+                    }
+                    TextButton(
+                        onClick = { showEdit = !showEdit },
+                        modifier = Modifier.background(Color.Black, RoundedCornerShape(100.dp))
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                        Text("Edit Quiz", color = Color.White)
                     }
                 }
             }
-        )
-        { innerPadding ->
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 200.dp),
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                items(quizList.size, key = {quizList[it].uid}) { index ->
-                    QuizBox(quizList[index], showEdit)
-                }
-
+        }
+    )
+    { innerPadding ->
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 200.dp),
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            items(quizList.size, key = { quizList[it].uid }) { index ->
+                QuizBox(quizList[index], showEdit)
             }
 
         }
+
     }
+
 }
