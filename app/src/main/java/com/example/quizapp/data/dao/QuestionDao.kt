@@ -14,6 +14,9 @@ import com.example.quizapp.data.models.WholeQuiz
 @Dao
 interface QuestionDao {
 
+    @Query("DELETE FROM QuestionEntity WHERE uid = :questionId")
+    suspend fun deleteQuestionById(questionId: Int)
+
     @Update
     suspend fun updateQuestion(questionEntity: QuestionEntity)
 

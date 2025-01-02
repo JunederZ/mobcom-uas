@@ -24,6 +24,9 @@ class QuizRepository @Inject constructor(
     suspend fun updateQuestion(questionEntity: QuestionEntity) = questionDao.updateQuestion(questionEntity)
     suspend fun updateAnswerOption(answerOptionEntity: AnswerOptionEntity) = answerOptionDao.updateAnswerOption(answerOptionEntity)
 
+    suspend fun deleteQuestion(questionId: Int) = questionDao.deleteQuestionById(questionId)
+    suspend fun deleteAnswerOption(answerOptionId: Int) = answerOptionDao.deleteAnswerOptionById(answerOptionId)
+
     suspend fun getQuizByQuestionId(questionId: Int): WholeQuiz =
         questionDao.getQuizByQuestionId(questionId)
 

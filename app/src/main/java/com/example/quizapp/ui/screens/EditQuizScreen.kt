@@ -36,7 +36,6 @@ import com.example.quizapp.ui.viewmodels.EditQuizViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditQuizScreen(
-    quizId: Int,
     navController: NavController,
     viewModel: EditQuizViewModel = hiltViewModel()
 ) {
@@ -92,7 +91,10 @@ fun EditQuizScreen(
                 }
 
             }
-            TextButton(modifier = Modifier.align(Alignment.BottomCenter), onClick = {}) {
+            TextButton(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                onClick = { viewModel.addNewQuestion("New Question") }
+            ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "add",
