@@ -35,11 +35,14 @@ fun QuizScreen(
     val isQuizComplete by viewModel.isQuizComplete.collectAsState()
     val length: Int
 
-    val navigateToResult by viewModel.navigateToResult.collectAsState()
+    val navigateFromQuiz by viewModel.navigateFromQuiz.collectAsState()
 
-    LaunchedEffect(navigateToResult) {
-        if (navigateToResult) {
+    LaunchedEffect(navigateFromQuiz) {
+        if (navigateFromQuiz == "result") {
             navController.navigate("result")
+        }
+        if (navigateFromQuiz == "menu") {
+            navController.navigate("menu")
         }
     }
 
@@ -79,7 +82,7 @@ fun QuizScreen(
                 }
                 Button(
                     modifier = Modifier,
-                    onClick = {  }
+                    onClick = viewModel::toMenu
                 ) {
                     Text("Questions")
                 }

@@ -1,6 +1,5 @@
 package com.example.quizapp.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +29,7 @@ fun ResultScreen(
     val correct by viewModel.correctCount.collectAsState()
     val score by viewModel.score.collectAsState()
 
-    val navigateToReview by viewModel.navigateToReview.collectAsState()
+    val navigateToReview by viewModel.navigateFromResult.collectAsState()
 
 
     LaunchedEffect(navigateToReview) {
