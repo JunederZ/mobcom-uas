@@ -35,7 +35,7 @@ fun ResultScreen(
 
     LaunchedEffect(navigateToReview) {
         if (navigateToReview == "review") {
-            navController.navigateUp()
+            navController.popBackStack()
         }
         if (navigateToReview == "home") {
             navController.navigate("home") {
