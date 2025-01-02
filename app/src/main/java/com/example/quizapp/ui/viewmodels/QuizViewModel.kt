@@ -1,16 +1,9 @@
 package com.example.quizapp.ui.viewmodels
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.quizapp.data.dao.AnswerOptionDao
-import com.example.quizapp.data.dao.QuestionDao
-import com.example.quizapp.data.dao.QuizDao
-import com.example.quizapp.data.models.AnswerOptionEntity
-import com.example.quizapp.data.models.QuestionEntity
-import com.example.quizapp.data.models.QuizEntity
 import com.example.quizapp.data.models.WholeQuiz
 import com.example.quizapp.data.repositories.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +12,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -27,11 +19,14 @@ class QuizViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ): ViewModel() {
 
-    private var _navigateToResult = MutableStateFlow(false)
-    var navigateToResult : StateFlow<Boolean> = _navigateToResult.asStateFlow()
+    private var _navigateFromQuiz = MutableStateFlow("")
+    var navigateFromQuiz : StateFlow<String> = _navigateFromQuiz.asStateFlow()
 
-    private var _navigateToReview = MutableStateFlow("false")
-    var navigateToReview : StateFlow<String> = _navigateToReview.asStateFlow()
+    private var _navigateFromResult = MutableStateFlow("")
+    var navigateFromResult : StateFlow<String> = _navigateFromResult.asStateFlow()
+
+    private var _navigateFromMenu = MutableStateFlow(false)
+    var navigateFromMenu : StateFlow<Boolean> = _navigateFromMenu.asStateFlow()
 
     val quizId: Int = savedStateHandle["quizId"]!!
 
@@ -91,17 +86,32 @@ class QuizViewModel @Inject constructor(
     }
 
     fun toResult() {
-        _navigateToReview.value = ""
-        _navigateToResult.value = true
+        _navigateFromResult.value = ""
+        _navigateFromQuiz.value = "result"
     }
 
     fun toReview() {
-        _navigateToResult.value = false
-        _navigateToReview.value = "review"
+        _navigateFromQuiz.value = ""
+        _navigateFromResult.value = "review"
     }
 
     fun toHome() {
-        _navigateToReview.value = "home"
+        _navigateFromResult.value = "home"
+    }
+
+    fun toMenu() {
+        _navigateFromMenu.value = false
+        _navigateFromQuiz.value = "menu"
+    }
+
+    fun backFromMenu() {
+        _navigateFromQuiz.value = ""
+        _navigateFromMenu.value = true
+    }
+
+    fun jumpToQuestion(questionId: Int) {
+        _questionIndex.value = questionId
+        backFromMenu()
     }
 
     fun finishQuiz() {
@@ -123,7 +133,7 @@ class QuizViewModel @Inject constructor(
             Log.d("SCORE", _score.value.toString())
             _isQuizComplete.value = true
             _dialogVisibility.value = false
-            _navigateToResult.value = true
+            _navigateFromQuiz.value = "result"
 
         }
 

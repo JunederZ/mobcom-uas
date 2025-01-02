@@ -15,26 +15,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.quizapp.ui.viewmodels.QuizViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionListScreen(
-    title: String = "Untitled Quiz",
+    navController: NavHostController,
     viewModel: QuizViewModel = hiltViewModel()
 ) {
 
     val quiz by viewModel.quiz.collectAsState()
     val length = quiz.questions!!.size
-    val numbers by remember { mutableStateOf(List(7) { it + 1 }) }
+    val title = quiz.quiz!!.title
+
+    val navigateFromMenu by viewModel.navigateFromMenu.collectAsState()
+
+    LaunchedEffect(navigateFromMenu) {
+        if (navigateFromMenu) {
+            navController.navigateUp()
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(title) },
                 navigationIcon = {
-                    IconButton(onClick = {  }) {
+                    IconButton(onClick = viewModel::backFromMenu) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -52,10 +61,10 @@ fun QuestionListScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(numbers) { number ->
+                items(length) { number ->
                     NumberCard(
                         number = number,
-                        onClick = { /* Handle number click */ }
+                        onClick = { viewModel.jumpToQuestion(number) }
                     )
                 }
             }
