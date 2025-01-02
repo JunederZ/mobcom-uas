@@ -29,6 +29,7 @@ import com.example.quizapp.ui.viewmodels.EditQuizViewModel
 @Composable
 fun QuestionBox(
     question: QuestionEntity,
+    index: Int,
     viewModel: EditQuizViewModel = hiltViewModel()
 ) {
     Card(
@@ -41,7 +42,7 @@ fun QuestionBox(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = question.uid.toString(),
+                text = ( index + 1 ).toString(),
                 style = MaterialTheme.typography.titleLarge
             )
         }

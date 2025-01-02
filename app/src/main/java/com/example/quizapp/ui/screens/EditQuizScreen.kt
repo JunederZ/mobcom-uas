@@ -1,6 +1,8 @@
 package com.example.quizapp.ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -80,10 +82,13 @@ fun EditQuizScreen(
             contentAlignment = Alignment.TopCenter,
         ) {
             LazyVerticalGrid(
-                columns = GridCells.FixedSize(480.dp)
+                columns = GridCells.Fixed(5),
+                contentPadding = PaddingValues(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(questionList.size) { index ->
-                    QuestionBox(questionList[index])
+                    QuestionBox(questionList[index], index)
                 }
 
             }

@@ -70,7 +70,7 @@ fun AppNavHost(navController: NavHostController) {
                 navController.getBackStackEntry(Routes.Quiz.route)
             }
             val viewModel: QuizViewModel = hiltViewModel(parentEntry)
-            QuestionListScreen(viewModel=viewModel)
+            QuestionListScreen(navController=navController, viewModel=viewModel)
         }
 
     }

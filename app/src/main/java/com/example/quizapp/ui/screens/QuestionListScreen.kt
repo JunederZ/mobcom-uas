@@ -56,14 +56,14 @@ fun QuestionListScreen(
                 .fillMaxSize()
         ) {
             LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
+                columns = GridCells.Fixed(5),
                 contentPadding = PaddingValues(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(length) { number ->
                     NumberCard(
-                        number = number,
+                        number = number + 1,
                         onClick = { viewModel.jumpToQuestion(number) }
                     )
                 }

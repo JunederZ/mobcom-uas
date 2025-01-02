@@ -49,7 +49,7 @@ fun MainPage(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    viewModel.populateDatabase()
+//    viewModel.populateDatabase()
 
     var showEdit by remember { mutableStateOf(false) }
     val quizList by viewModel.quizList.collectAsState()

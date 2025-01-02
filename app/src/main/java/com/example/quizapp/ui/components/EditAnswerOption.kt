@@ -12,6 +12,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -62,13 +63,22 @@ fun EditAnswerOption (
             .background(backgroundColor)
             .fillMaxWidth()
             .clickable { onSelect(questionId, answerId) }
-            .padding(24.dp),
+            .padding(horizontal = 24.dp, vertical = 16.dp),
         contentAlignment = Alignment.Center
     ) {
         TextField(
             value = optionText,
             onValueChange = onChange,
-            textStyle = TextStyle(color = textColor)
+            textStyle = TextStyle(color = textColor),
+            colors = TextFieldDefaults.colors(
+//                focusedContainerColor = Color.Transparent,
+//                unfocusedContainerColor = Color.Transparent,
+//                disabledContainerColor = Color.Transparent,
+//                errorContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
+            placeholder = { Text("Enter option") }
         )
     }
 

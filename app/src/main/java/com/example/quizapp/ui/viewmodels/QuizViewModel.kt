@@ -111,6 +111,8 @@ class QuizViewModel @Inject constructor(
 
     fun jumpToQuestion(questionId: Int) {
         _questionIndex.value = questionId
+        _progress.value = ((_questionIndex.value.toFloat() + 1) / _quiz.value.questions!!.size)
+        updateCurrentQuestionAnswer()
         backFromMenu()
     }
 
