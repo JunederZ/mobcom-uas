@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -110,7 +112,9 @@ fun EditQuestionScreen(
                             verticalAlignment = Alignment.Bottom
 
                         ) {
-                            Text(quiz!!.quiz!!.title)
+                            Text(quiz!!.quiz!!.title, style=MaterialTheme.typography.headlineLarge,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -127,12 +131,13 @@ fun EditQuestionScreen(
                                 },
                                 textStyle = MaterialTheme.typography.titleLarge,
                                 colors = TextFieldDefaults.colors(
-                                    focusedContainerColor = Color.Transparent,
-                                    unfocusedContainerColor = Color.Transparent,
-                                    disabledContainerColor = Color.Transparent,
-                                    errorContainerColor = Color.Transparent,
+//                                    focusedContainerColor = Color.Transparent,
+//                                    unfocusedContainerColor = Color.Transparent,
+//                                    disabledContainerColor = Color.Transparent,
+//                                    errorContainerColor = Color.Transparent,
                                 ),
-                                placeholder = { Text("Enter question body") }
+                                placeholder = { Text("Enter question body") },
+                                modifier = Modifier.fillMaxWidth()
                             )
 
                             Spacer(modifier = Modifier.height(32.dp))
